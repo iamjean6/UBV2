@@ -22,7 +22,9 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Copy custom Nginx configuration as a template so envsubst runs on it
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# EXPOSE $PORT locally, but on Railway this dynamically exposes the Railway port
-EXPOSE $PORT
+# Force Nginx to run only 2 workers instead of 'auto' (which spawns 100+ on Railway's large nodes causing OOM/Restarts)
+RUN sed -i 's/worker_processes.*/worker_processes 2;/g' /etc/nginx/nginx.conf
 
+# EXPOSE is not required on Railway; Railway automatically routes to $PORT
+# EXPOSE $PORT
 CMD ["nginx", "-g", "daemon off;"]
