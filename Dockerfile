@@ -19,9 +19,10 @@ FROM nginx:stable-alpine
 # Copy the build output to Nginx's html directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom Nginx configuration as a template so envsubst runs on it
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-EXPOSE 80
+# EXPOSE $PORT locally, but on Railway this dynamically exposes the Railway port
+EXPOSE $PORT
 
 CMD ["nginx", "-g", "daemon off;"]
