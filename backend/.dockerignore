@@ -3,11 +3,3 @@ node_modules
 .gitignore
 Dockerfile
 .env
-scripts
-util
-model
-middleware
-controller
-pgdb
-routes
-cache
