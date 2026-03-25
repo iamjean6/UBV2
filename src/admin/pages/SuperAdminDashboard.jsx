@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Activity, Shield, User, Clock, Search, Filter, Database, Server, Cpu, Globe } from 'lucide-react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || process.env.BACKEND_URL || '/api';
+
 export default function SuperAdminDashboard() {
     const [activities, setActivities] = useState([]);
     const [vitals, setVitals] = useState(null);
@@ -14,8 +16,8 @@ export default function SuperAdminDashboard() {
                 const headers = { 'Authorization': `Bearer ${token}` };
                 
                 const [actRes, vitRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/admin/activities', { headers }),
-                    fetch('http://localhost:5000/api/admin/vitals', { headers })
+                    fetch(`${API_BASE_URL}/admin/activities`, { headers }),
+                    fetch(`${API_BASE_URL}/admin/vitals`, { headers })
                 ]);
 
                 const actResult = await actRes.json();
