@@ -18,14 +18,14 @@ export const getFeatures = async (req, res) => {
             console.log("Features fetched from Cache");
             return res.status(200).json({ success: true, ...cachedFeatures });
         }
-        
+
         const features = await FeatureStory.find().sort({ date: -1 }).skip(skip).limit(limit);
         const totalCount = await FeatureStory.countDocuments();
         const totalPages = Math.ceil(totalCount / limit);
 
         const cacheData = { data: features, currentPage: page, totalPages, totalCount };
         await cache.saveFeatures(page, limit, cacheData);
-        
+
         console.log("Features fetched from db and cached");
         return res.status(200).json({ success: true, ...cacheData });
     } catch (err) {
@@ -39,22 +39,22 @@ export const getOneStory = async (req, res) => {
         const { id } = req.params;
         const cachedStory = await cache.fetchFeatureDetail(id);
         if (cachedStory) {
-            console.log("Feature Story fetched from cache");
+
             return res.status(200).json({ success: true, data: cachedStory });
         }
-        
+
         // Increment views
         const story = await FeatureStory.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true });
         if (!story) {
             return res.status(404).json({ success: false, message: "Feature Story not found" });
         }
-        
+
         try {
             if (story.key) await getObject(story.key);
         } catch (s3err) {
             console.warn("S3 getObject failed for key:", story.key, s3err.message);
         }
-        
+
         await cache.saveFeatureDetail(id, story);
         console.log("Feature Story fetched from database and cached");
         return res.status(200).json({ success: true, data: story });
@@ -90,7 +90,7 @@ export const createStory = async (req, res) => {
                 message: "Cover image is required"
             });
         }
-        
+
         // Optimize cover image
         const optimizedBuffer = await sharp(file.data)
             .resize(1200, null, { withoutEnlargement: true })
@@ -101,7 +101,7 @@ export const createStory = async (req, res) => {
         if (!uploadResult || !uploadResult.url) {
             throw new Error("Failed to upload cover image");
         }
-        
+
         let finalVideoUrl = videoUrl || null;
         let finalVideoKey = null;
         if (videoFile) {
@@ -123,7 +123,7 @@ export const createStory = async (req, res) => {
             video: finalVideoUrl,
             videoKey: finalVideoKey,
         });
-        
+
         await cache.invalidateFeaturesCache();
         return res.status(201).json({
             status: "success",
@@ -140,12 +140,12 @@ export const getLikes = async (req, res) => {
         const { id } = req.params;
         const cachedLikes = await cache.fetchFeatureLikes(id);
         if (cachedLikes) {
-            console.log("Likes fetched from cache");
+
             return res.status(200).json({ success: true, data: cachedLikes });
         }
         const likes = await FeatureStory.findById(id).select("likes");
         await cache.saveFeatureLikes(id, likes);
-        console.log("Likes fetched from database and cached");
+
         return res.status(200).json({ success: true, data: likes });
     } catch (err) {
         console.error("Error fetching likes:", err);
@@ -163,7 +163,7 @@ export const updateStory = async (req, res) => {
         if (!story) {
             return res.status(404).json({ success: false, message: 'Story not found' });
         }
-        
+
         let updateData = {
             title,
             excerpt,
@@ -172,7 +172,7 @@ export const updateStory = async (req, res) => {
             date,
             video: videoUrl !== undefined ? videoUrl : story.video
         };
-        
+
         if (files.file) {
             const fileName = "features/" + v4() + ".webp";
             const optimizedBuffer = await sharp(files.file.data)
@@ -193,11 +193,11 @@ export const updateStory = async (req, res) => {
                 updateData.video = uploadedVideo.url;
                 updateData.videoKey = uploadedVideo.key;
             }
-        } 
-        
+        }
+
         const updateStory = await FeatureStory.findByIdAndUpdate(id, updateData, { new: true });
         await cache.invalidateFeaturesCache(id);
-        
+
         return res.status(200).json({ success: true, data: updateStory });
     } catch (err) {
         console.error("Error updating story:", err);
@@ -224,7 +224,7 @@ export const deleteStory = async (req, res) => {
                 console.warn(`S3 image deletion failed for key ${story.key}: ${s3Response.message}`);
             }
         }
-        
+
         if (story.videoKey) {
             console.log(`S3 video key found: ${story.videoKey}. Attempting S3 deletion...`);
             await deleteObject(story.videoKey);

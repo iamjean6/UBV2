@@ -50,7 +50,7 @@ router.get('/:id', async (req, res) => {
         const { id } = req.params;
         const cachedGame = await cache.fetchGameDetail(id);
         if (cachedGame) {
-            console.log("Game detail retrieved from cache");
+
             return res.status(200).json({
                 "status": "success",
                 "data": cachedGame

@@ -27,14 +27,14 @@ export const getPrograms = async (req, res) => {
 
         const cacheData = { data: events, currentPage: page, totalPages, totalCount };
         await cache.savePrograms(page, limit, cacheData);
-        console.log("Programs retrieved from Database and cached");
+
 
         return res.status(200).json({
             "status": "success",
             ...cacheData
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -44,7 +44,7 @@ export const getOneProgram = async (req, res) => {
         const { id } = req.params
         const cachedProgram = await cache.fetchProgramDetail(id);
         if (cachedProgram) {
-            console.log(`Program ${id} retrieved from cache`);
+
             return res.status(200).json({
                 "status": "success",
                 "data": cachedProgram
@@ -61,14 +61,14 @@ export const getOneProgram = async (req, res) => {
         }
         await getObject(event.key);
         await cache.saveProgramDetail(id, event);
-        console.log(`Program ${id} retrieved from Database and cached`);
+
 
         return res.status(200).json({
             "status": "success",
             "data": event
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -195,7 +195,7 @@ export const updateProgram = async (req, res) => {
             "data": updatedEvent
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -227,7 +227,7 @@ export const deleteProgram = async (req, res) => {
             "message": "Program deleted successfully"
         })
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }

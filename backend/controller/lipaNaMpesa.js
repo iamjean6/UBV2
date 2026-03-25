@@ -19,7 +19,7 @@ router.post("/stk", authToken, async (req, res) => {
             return res.status(401).json({ error: "Access token missing" })
         }
         const domain = process.env.DOMAIN || req.callbackUrl
-        console.log(domain)
+
         const password = Buffer.from(`${process.env.BusinessShortCode}${process.env.MPESA_PASSKEY}${timestamp}`).toString('base64')
         const stkUrl = ''
 
@@ -45,7 +45,7 @@ router.post("/stk", authToken, async (req, res) => {
         })
         const stkResponse = response.data;
 
-        console.log(stkResponse);
+
 
         const queryEndpoint = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
 
@@ -74,7 +74,7 @@ router.post("/stk", authToken, async (req, res) => {
                     resultCode = status.data.ResultCode;
                     resultDesc = status.data.ResultDesc;
 
-                    console.log('Query response:', resultCode, resultDesc);
+
 
                     if (resultCode == '0') {
                         res.render('success', {
