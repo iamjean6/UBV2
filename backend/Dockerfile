@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 
 # Expose the API port
-EXPOSE 5000
+EXPOSE 80
 
 # Start the application
 CMD ["node", "index.js"]
