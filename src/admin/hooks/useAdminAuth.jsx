@@ -5,6 +5,9 @@ export const ROLES = {
     ADMIN: 'admin',
 };
 
+// Use relative path for production (proxied through nginx), fallback to localhost for dev
+const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -22,7 +25,7 @@ export function AuthProvider({ children }) {
 
     const login = async (username, password) => {
         try {
-            const response = await fetch('http://localhost:5000/api/auth/admin/login', {
+            const response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
