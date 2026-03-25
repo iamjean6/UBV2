@@ -5,8 +5,8 @@ export const ROLES = {
     ADMIN: 'admin',
 };
 
-// Use relative path for production (proxied through nginx), fallback to localhost for dev
-const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+// Use REACT_APP_API_URL for local dev, BACKEND_URL for Railway production, fallback to relative /api
+const API_BASE_URL = process.env.REACT_APP_API_URL || process.env.BACKEND_URL || '/api';
 
 const AuthContext = createContext(null);
 

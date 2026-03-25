@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { Users as UsersIcon, ShoppingCart, Trophy, Activity, Star, Award, Zap, Target, Percent } from 'lucide-react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || process.env.BACKEND_URL || '/api';
+
 export default function Dashboard() {
     const [stats, setStats] = useState(null);
     const [playerSummary, setPlayerSummary] = useState(null);
@@ -14,8 +16,8 @@ export default function Dashboard() {
                 const headers = { 'Authorization': `Bearer ${token}` };
 
                 const [statsRes, playersRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/admin/dashboard-stats', { headers }),
-                    fetch('http://localhost:5000/api/admin/player-stats-summary', { headers })
+                    fetch(`${API_BASE_URL}/admin/dashboard-stats`, { headers }),
+                    fetch(`${API_BASE_URL}/admin/player-stats-summary`, { headers })
                 ]);
 
                 const statsData = await statsRes.json();
