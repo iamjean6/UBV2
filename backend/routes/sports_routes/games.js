@@ -3,6 +3,7 @@ import pool from '../../pgdb/db.js';
 import cache from '../../cache/cache.js';
 import { protectAdminRoute } from '../../middleware/authMiddleware.js';
 import { logAdminActivity } from '../../middleware/adminActivityLogger.js';
+import logger from '../../util/logger.js';
 
 const router = express.Router();
 
@@ -11,7 +12,6 @@ router.get('/', async (req, res) => {
     try {
         const cachedGames = await cache.fetchGames();
         if (cachedGames) {
-            console.log("Games retrieved from cache");
             return res.status(200).json({
                 "status": "success",
                 "data": cachedGames
@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching games:', err);
+        logger.error('Error fetching games:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching games'
@@ -77,7 +77,7 @@ router.get('/:id', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error fetching game detail:', err);
+        logger.error('Error fetching game detail:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching game detail'
@@ -103,7 +103,7 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_GAME', 'Sports'), a
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error creating game:', err);
+        logger.error('Error creating game:', err);
 
         res.status(500).json({
             status: 'error',
@@ -134,7 +134,7 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_GAME', 'Sports'),
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error updating game:', err);
+        logger.error('Error updating game:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while updating game'
@@ -156,7 +156,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_GAME', 'Sports
             message: 'Game deleted successfully'
         });
     } catch (err) {
-        console.error('Error deleting game:', err);
+        logger.error('Error deleting game:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while deleting game'

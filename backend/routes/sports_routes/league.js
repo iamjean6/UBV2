@@ -1,6 +1,7 @@
 import express from 'express'
 import pool from '../../pgdb/db.js'
 import cache from '../../cache/cache.js'
+import logger from '../../util/logger.js';
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching leagues:', err);
+        logger.error('Error fetching leagues:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching leagues'
@@ -42,7 +43,7 @@ router.post('/', async (req, res) => {
             data: result.rows[0]
         })
     } catch (err) {
-        console.error('Error creating league:', err);
+        logger.error('Error creating league:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while creating league'
@@ -69,7 +70,7 @@ router.put('/:id', async (req, res) => {
             data: result.rows[0]
         })
     } catch (err) {
-        console.error('Error updating league:', err);
+        logger.error('Error updating league:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while updating league'
@@ -96,7 +97,7 @@ router.delete('/:id', async (req, res) => {
             message: "League deleted successfully"
         })
     } catch (err) {
-        console.error('Error deleting league:', err);
+        logger.error('Error deleting league:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while deleting league'

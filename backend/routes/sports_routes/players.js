@@ -7,6 +7,7 @@ import cache from '../../cache/cache.js';
 import { protectAdminRoute } from '../../middleware/authMiddleware.js';
 import { logAdminActivity } from '../../middleware/adminActivityLogger.js';
 import sharp from 'sharp';
+import logger from '../../util/logger.js';
 
 const router = express.Router();
 
@@ -50,7 +51,7 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PLAYER', 'Sports'),
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error creating player:', err);
+        logger.error('Error creating player:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while creating player'
@@ -81,7 +82,7 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching players:', err);
+        logger.error('Error fetching players:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching players'
@@ -116,7 +117,7 @@ router.get('/:id', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error fetching player detail:', err);
+        logger.error('Error fetching player detail:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching player detail'
@@ -184,7 +185,7 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PLAYER', 'Sports'
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error updating player:', err);
+        logger.error('Error updating player:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while updating player'
@@ -225,7 +226,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PLAYER', 'Spor
             message: 'Player deleted successfully'
         });
     } catch (err) {
-        console.error('Error deleting player:', err);
+        logger.error('Error deleting player:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while deleting player'

@@ -1,4 +1,5 @@
 import express from "express"
+import logger from '../util/logger.js';
 
 const router = express.Router()
 
@@ -10,7 +11,7 @@ router.get("/", async (req, res)=>{
         const offset = (currentPage -1)*limitPerPage 
 
     }catch(e){
-        console.error(`GET /subjects error: ${e}`)
+        logger.error(`GET /subjects error: ${e}`)
         res.status(500).json({error: "Failed to get players"})
         
     }

@@ -5,6 +5,7 @@ import { getObject } from '../util/getObject.js';
 import { deleteObject } from '../util/deleteObject.js';
 import cache from '../cache/cache.js';
 import sharp from 'sharp';
+import logger from '../util/logger.js';
 
 export const getPrograms = async (req, res) => {
     try {
@@ -14,7 +15,6 @@ export const getPrograms = async (req, res) => {
 
         const cachedPrograms = await cache.fetchPrograms(page, limit);
         if (cachedPrograms) {
-            console.log("Programs retrieved from cache");
             return res.status(200).json({
                 "status": "success",
                 ...cachedPrograms
@@ -34,7 +34,7 @@ export const getPrograms = async (req, res) => {
             ...cacheData
         })
     } catch (err) {
-        console.error(err)
+        logger.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -68,7 +68,7 @@ export const getOneProgram = async (req, res) => {
             "data": event
         })
     } catch (err) {
-        console.error(err)
+        logger.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -130,7 +130,7 @@ export const createProgram = async (req, res) => {
             "data": event,
         })
     } catch (err) {
-        console.error('Error in createProgram:', err);
+        logger.error('Error in createProgram:', err);
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -195,7 +195,7 @@ export const updateProgram = async (req, res) => {
             "data": updatedEvent
         })
     } catch (err) {
-        console.error(err)
+        logger.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }
@@ -227,7 +227,7 @@ export const deleteProgram = async (req, res) => {
             "message": "Program deleted successfully"
         })
     } catch (err) {
-        console.error(err)
+        logger.error(err)
         return res.status(500).json({ "status": "error", "message": err.message })
     }
 }

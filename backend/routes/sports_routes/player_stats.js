@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../../pgdb/db.js';
 import cache from '../../cache/cache.js';
+import logger from '../../util/logger.js';
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.get('/game/:game_id', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching game stats:', err);
+        logger.error('Error fetching game stats:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching game stats'
@@ -56,7 +57,7 @@ router.get('/player/:player_id', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching player stats:', err);
+        logger.error('Error fetching player stats:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching player stats'
@@ -116,7 +117,7 @@ router.get('/player/:player_id/averages', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error calculating player averages:', err);
+        logger.error('Error calculating player averages:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while calculating player averages'
@@ -179,7 +180,7 @@ router.post('/', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error saving player stats:', err);
+        logger.error('Error saving player stats:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while saving player stats'
@@ -205,7 +206,7 @@ router.delete('/:game_id/:player_id', async (req, res) => {
             message: 'Stats deleted successfully'
         });
     } catch (err) {
-        console.error('Error deleting player stats:', err);
+        logger.error('Error deleting player stats:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while deleting player stats'

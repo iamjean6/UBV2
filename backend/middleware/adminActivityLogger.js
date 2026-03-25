@@ -1,4 +1,5 @@
 import pool from '../pgdb/db.js';
+import logger from '../util/logger.js';
 
 export const logAdminActivity = (action, module) => {
     return async (req, res, next) => {
@@ -28,9 +29,9 @@ export const logAdminActivity = (action, module) => {
                         VALUES ($1, $2, $3, $4, $5, $6, $7)
                     `, [adminId, adminUsername, action || req.method, module, targetId, JSON.stringify(details), req.ip])
                     .then(() => {
-                        console.log(`\x1b[36m[ADMIN_ACTIVITY]\x1b[0m ${adminUsername} performed ${action || req.method} on ${module} (ID: ${targetId || 'N/A'})`);
+                        logger.info(`\x1b[36m[ADMIN_ACTIVITY]\x1b[0m ${adminUsername} performed ${action || req.method} on ${module} (ID: ${targetId || 'N/A'})`);
                     })
-                    .catch(err => console.error('Error logging admin activity:', err));
+                    .catch(err => logger.error('Error logging admin activity:', err));
                 }
             }
             

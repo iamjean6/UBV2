@@ -7,6 +7,7 @@ import { deleteObject } from '../../util/deleteObject.js';
 import { protectAdminRoute } from '../../middleware/authMiddleware.js';
 import { logAdminActivity } from '../../middleware/adminActivityLogger.js';
 import sharp from 'sharp';
+import logger from '../../util/logger.js';
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.get('/categories', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching categories:', err);
+        logger.error('Error fetching categories:', err);
         res.status(500).json({
             status: "error",
             message: "Internal server error while fetching categories"
@@ -73,7 +74,7 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching products:', err);
+        logger.error('Error fetching products:', err);
         res.status(500).json({
             status: "error",
             message: "Internal server error while fetching products"
@@ -123,7 +124,7 @@ router.get('/:slug', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error fetching product:', err);
+        logger.error('Error fetching product:', err);
         res.status(500).json({
             status: "error",
             message: "Internal server error while fetching product"
@@ -175,7 +176,7 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PRODUCT', 'Ecommerc
                     variants.push(vRes.rows[0]);
                 }
             } catch (e) {
-                console.error("Failed to parse variants", e);
+                logger.error("Failed to parse variants", e);
             }
         }
 
@@ -217,7 +218,7 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PRODUCT', 'Ecommerc
         });
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error('Error creating product:', err);
+        logger.error('Error creating product:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while creating product'
@@ -281,7 +282,7 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PRODUCT', 'Ecomme
                     updatedVariants.push(vRes.rows[0]);
                 }
             } catch (e) {
-                console.error("Failed to parse/update variants", e);
+                logger.error("Failed to parse/update variants", e);
             }
         }
 
@@ -325,7 +326,7 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PRODUCT', 'Ecomme
         });
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error('Error updating product:', err);
+        logger.error('Error updating product:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while updating product'
@@ -358,7 +359,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PRODUCT', 'Eco
                     const key = row.image_url.split('.com/')[1];
                     await deleteObject(key);
                 } catch (e) {
-                    console.error("Failed to delete image from S3:", e);
+                    logger.error("Failed to delete image from S3:", e);
                 }
             }
         }
@@ -372,7 +373,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PRODUCT', 'Eco
             message: 'Product deleted successfully'
         });
     } catch (err) {
-        console.error('Error deleting product:', err);
+        logger.error('Error deleting product:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while deleting product'

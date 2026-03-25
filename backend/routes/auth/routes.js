@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../../pgdb/db.js';
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
+import logger from '../../util/logger.js';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const router = express.Router();
@@ -65,7 +66,7 @@ router.post('/google', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Google Auth Error:', error);
+        logger.error('Google Auth Error:', error);
         res.status(401).json({ status: 'error', message: 'Invalid Google Token' });
     }
 });
@@ -113,7 +114,7 @@ router.post('/register', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Registration error:', err);
+        logger.error('Registration error:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error'
@@ -173,7 +174,7 @@ router.post('/login', async (req, res) => {
             }
         });
     } catch (err) {
-        console.error('Login error:', err);
+        logger.error('Login error:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error'
@@ -223,7 +224,7 @@ router.post('/admin/login', async (req, res) => {
             }
         });
     } catch (err) {
-        console.error('Admin Login Error:', err);
+        logger.error('Admin Login Error:', err);
         res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 });

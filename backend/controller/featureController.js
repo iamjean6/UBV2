@@ -6,6 +6,7 @@ import { deleteObject } from "../util/deleteObject.js";
 import cache from "../cache/cache.js";
 import mongoose from "mongoose";
 import sharp from "sharp";
+import logger from '../util/logger.js';
 
 export const getFeatures = async (req, res) => {
     try {
@@ -15,7 +16,7 @@ export const getFeatures = async (req, res) => {
 
         const cachedFeatures = await cache.fetchFeatures(page, limit);
         if (cachedFeatures) {
-            console.log("Features fetched from Cache");
+
             return res.status(200).json({ success: true, ...cachedFeatures });
         }
 
@@ -26,10 +27,10 @@ export const getFeatures = async (req, res) => {
         const cacheData = { data: features, currentPage: page, totalPages, totalCount };
         await cache.saveFeatures(page, limit, cacheData);
 
-        console.log("Features fetched from db and cached");
+
         return res.status(200).json({ success: true, ...cacheData });
     } catch (err) {
-        console.error("Error fetching features:", err);
+        logger.error("Error fetching features:", err);
         return res.status(500).json({ success: false, message: err.message });
     }
 };
@@ -52,14 +53,14 @@ export const getOneStory = async (req, res) => {
         try {
             if (story.key) await getObject(story.key);
         } catch (s3err) {
-            console.warn("S3 getObject failed for key:", story.key, s3err.message);
+            logger.warn("S3 getObject failed for key:", story.key, s3err.message);
         }
 
         await cache.saveFeatureDetail(id, story);
-        console.log("Feature Story fetched from database and cached");
+
         return res.status(200).json({ success: true, data: story });
     } catch (err) {
-        console.error("Error fetching story", err);
+        logger.error("Error fetching story", err);
         return res.status(500).json({ success: false, message: err.message });
     }
 };
@@ -130,7 +131,7 @@ export const createStory = async (req, res) => {
             data: story,
         });
     } catch (err) {
-        console.error('Error in creating a Feature Story', err);
+        logger.error('Error in creating a Feature Story', err);
         return res.status(500).json({ success: false, message: err.message });
     }
 };
@@ -148,7 +149,7 @@ export const getLikes = async (req, res) => {
 
         return res.status(200).json({ success: true, data: likes });
     } catch (err) {
-        console.error("Error fetching likes:", err);
+        logger.error("Error fetching likes:", err);
         return res.status(500).json({ success: false, message: err.message });
     }
 };
@@ -200,7 +201,7 @@ export const updateStory = async (req, res) => {
 
         return res.status(200).json({ success: true, data: updateStory });
     } catch (err) {
-        console.error("Error updating story:", err);
+        logger.error("Error updating story:", err);
         return res.status(500).json({ success: false, message: err.message });
     }
 };
@@ -213,20 +214,19 @@ export const deleteStory = async (req, res) => {
             return res.status(404).json({ status: "error", message: "Feature Story not found" });
         }
 
-        console.log(`Attempting deletion for Feature Story ID: ${id}`);
+        logger.info(`Attempting deletion for Feature Story ID: ${id}`);
 
         if (story.key) {
-            console.log(`S3 key found: ${story.key}. Attempting S3 deletion...`);
+            logger.info(`S3 key found: ${story.key}. Attempting S3 deletion...`);
             const s3Response = await deleteObject(story.key);
-            console.log("S3 Delete Result:", s3Response);
 
             if (s3Response && s3Response.status >= 400 && s3Response.status !== 404) {
-                console.warn(`S3 image deletion failed for key ${story.key}: ${s3Response.message}`);
+                logger.warn(`S3 image deletion failed for key ${story.key}: ${s3Response.message}`);
             }
         }
 
         if (story.videoKey) {
-            console.log(`S3 video key found: ${story.videoKey}. Attempting S3 deletion...`);
+            logger.info(`S3 video key found: ${story.videoKey}. Attempting S3 deletion...`);
             await deleteObject(story.videoKey);
         }
 
@@ -238,7 +238,7 @@ export const deleteStory = async (req, res) => {
             message: "Article deleted successfully"
         });
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(500).json({ status: "error", message: err.message });
     }
 };

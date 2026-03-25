@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import morgan from 'morgan';
 import fileUpload from 'express-fileupload';
+import logger from './util/logger.js';
 import { getPrograms, getOneProgram, createProgram, updateProgram, deleteProgram } from './controller/programController.js';
 import playersRouter from './routes/sports_routes/players.js';
 import teamsRouter from './routes/sports_routes/teams.js';
@@ -30,7 +31,9 @@ app.use(fileUpload({
 }));
 
 // Logging Middleware
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'production') {
+    app.use(morgan('dev'));
+}
 
 // Test Route
 app.get('/', (req, res) => {
@@ -63,11 +66,11 @@ app.post('/api/payments/mock-callback', mockPaymentCallback);
 
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
-        console.log('Connected to MongoDB');
+        logger.info('Connected to MongoDB');
         app.listen(PORT, '0.0.0.0', () => {
-            console.log(`Server is running on port ${PORT}`);
+            logger.info(`Server is running on port ${PORT}`);
         });
     })
     .catch((err) => {
-        console.error('Database connection error:', err);
+        logger.error('Database connection error:', err);
     });

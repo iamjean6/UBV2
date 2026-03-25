@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import logger from '../../util/logger.js';
 
 const app = express();
 dotenv.config();
@@ -20,7 +21,7 @@ export async function authToken(req, res, next) {
 
         next();
     } catch (error) {
-        console.error('Authentication Error:', error);
+        logger.error('Authentication Error:', error);
 
         if (axios.isAxiosError(error)) {
             if (error.response && error.response.status === 400) {

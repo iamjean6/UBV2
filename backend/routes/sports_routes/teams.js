@@ -7,6 +7,7 @@ import { deleteObject } from '../../util/deleteObject.js'
 import { protectAdminRoute } from '../../middleware/authMiddleware.js'
 import { logAdminActivity } from '../../middleware/adminActivityLogger.js'
 import sharp from 'sharp'
+import logger from '../../util/logger.js';
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching teams:', err);
+        logger.error('Error fetching teams:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching teams'
@@ -55,7 +56,7 @@ router.get('/:id', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        console.error('Error fetching team detail:', err);
+        logger.error('Error fetching team detail:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while fetching team detail'
@@ -89,7 +90,7 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_TEAM', 'Sports'), a
             data: result.rows[0]
         })
     } catch (err) {
-        console.error('Error creating teams:', err);
+        logger.error('Error creating teams:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while creating team'
@@ -135,7 +136,7 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_TEAM', 'Sports'),
             data: result.rows[0]
         })
     } catch (err) {
-        console.error('Error updating team:', err);
+        logger.error('Error updating team:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while updating team'
@@ -170,7 +171,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_TEAM', 'Sports
             message: "Team deleted successfully"
         })
     } catch (err) {
-        console.error('Error deleting team:', err);
+        logger.error('Error deleting team:', err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while deleting team'

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import pool from '../pgdb/db.js';
+import logger from '../util/logger.js';
 
 // Middleware to protect routes that require customer authentication
 export const protectCustomerRoute = async (req, res, next) => {
@@ -29,7 +30,7 @@ export const protectCustomerRoute = async (req, res, next) => {
 
             next();
         } catch (error) {
-            console.error('Not authorized, token failed:', error.message);
+            logger.error('Not authorized, token failed:', error.message);
             res.status(401).json({
                 status: 'error',
                 message: 'Not authorized, token failed'
@@ -67,7 +68,7 @@ export const protectAdminRoute = async (req, res, next) => {
             req.user = { id: adminCheck.rows[0].id, name: adminCheck.rows[0].username, role: decoded.role };
             next();
         } catch (error) {
-            console.error('Admin Auth Error:', error.message);
+            logger.error('Admin Auth Error:', error.message);
             res.status(401).json({ status: 'error', message: 'Not authorized, token failed' });
         }
     }
@@ -99,7 +100,7 @@ export const protectSuperAdminRoute = async (req, res, next) => {
             req.user = { id: adminCheck.rows[0].id, name: adminCheck.rows[0].username, role: decoded.role };
             next();
         } catch (error) {
-            console.error('Superadmin Auth Error:', error.message);
+            logger.error('Superadmin Auth Error:', error.message);
             res.status(401).json({ status: 'error', message: 'Not authorized, token failed' });
         }
     }

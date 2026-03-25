@@ -1,4 +1,5 @@
 import pool from '../pgdb/db.js';
+import logger from '../util/logger.js';
 
 export const createOrder = async (req, res) => {
     const client = await pool.connect();
@@ -46,7 +47,7 @@ export const createOrder = async (req, res) => {
         res.status(201).json({ status: 'success', data: { orderId } });
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error('Error creating order:', err);
+        logger.error('Error creating order:', err);
         res.status(500).json({ status: 'error', message: 'Failed to create order' });
     } finally {
         client.release();
@@ -94,7 +95,7 @@ export const updateOrderStatus = async (req, res) => {
         res.status(200).json({ status: 'success', message: `Order ${orderId} updated to ${status}` });
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error('Error updating order status:', err);
+        logger.error('Error updating order status:', err);
         res.status(500).json({ status: 'error', message: 'Failed to update order status' });
     } finally {
         client.release();
@@ -122,7 +123,7 @@ export const getSuccessfulOrders = async (req, res) => {
         const result = await pool.query(queryText);
         res.status(200).json({ status: 'success', data: result.rows });
     } catch (err) {
-        console.error('Error fetching successful orders:', err);
+        logger.error('Error fetching successful orders:', err);
         res.status(500).json({ status: 'error', message: 'Failed to fetch successful orders' });
     }
 };

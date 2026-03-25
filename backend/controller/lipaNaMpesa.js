@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import axios from "axios"
 import { getTimeStamp } from "../util/timeStamp"
 import { authToken } from "../routes/daraja/route"
+import logger from '../util/logger.js';
 dotenv.config()
 
 const router = express.Router()
@@ -112,7 +113,7 @@ router.post("/stk", authToken, async (req, res) => {
                     }
 
                 } catch (error) {
-                    console.error('Error in STK Push query:', error.response ? error.response.data : error.message);
+                    logger.error('Error in STK Push query:', error.response ? error.response.data : error.message);
 
 
 
@@ -122,12 +123,12 @@ router.post("/stk", authToken, async (req, res) => {
         }
 
     } catch (error) {
-        console.error("STK Push Error:", error.response?.data || error.message);
+        logger.error("STK Push Error:", error.response?.data || error.message);
         const errorData = error.response?.data;
-        // console.log(errorData)
+        // logger.info(errorData)
         const errorMessage = errorData?.errorMessage || error.message;
 
-        // console.log(errorMessage);
+        // logger.info(errorMessage);
         res.render('failed', {
             type: "failed",
             heading: "Error sending the push request",

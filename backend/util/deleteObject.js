@@ -1,5 +1,6 @@
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { s3Client } from './s3-credentials.js';
+import logger from './logger.js';
 
 export const deleteObject = async (key) => {
     try {
@@ -15,7 +16,7 @@ export const deleteObject = async (key) => {
         return { status: response.$metadata.httpStatusCode }
 
     } catch (error) {
-        console.error(error)
+        logger.error(error)
         return { status: 500, error }
     }
 }

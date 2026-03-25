@@ -1,4 +1,5 @@
 import pool from '../pgdb/db.js';
+import logger from '../util/logger.js';
 
 // Get Dashboard Stats
 export const getDashboardStats = async (req, res) => {
@@ -20,7 +21,7 @@ export const getDashboardStats = async (req, res) => {
             }
         });
     } catch (err) {
-        console.error('Error fetching dashboard stats:', err);
+        logger.error('Error fetching dashboard stats:', err);
         res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 };
@@ -102,7 +103,7 @@ export const getPlayerStatsSummary = async (req, res) => {
             }
         });
     } catch (err) {
-        console.error('Error fetching player stats summary:', err);
+        logger.error('Error fetching player stats summary:', err);
         res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 };
@@ -120,7 +121,7 @@ export const getAdminActivities = async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        console.error('Error fetching admin activities:', err);
+        logger.error('Error fetching admin activities:', err);
         res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 };
@@ -143,7 +144,7 @@ export const getSystemVitals = async (req, res) => {
             }
         });
     } catch (err) {
-        console.error('Error fetching system vitals:', err);
+        logger.error('Error fetching system vitals:', err);
         res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 };

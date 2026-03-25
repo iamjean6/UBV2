@@ -1,4 +1,5 @@
 import pg from 'pg';
+import logger from '../util/logger.js';
 const { Pool } = pg;
 let connectionString = process.env.DATABASE_URL;
 
@@ -19,11 +20,11 @@ const pool = new Pool({
 
 // Helper to log connection status
 pool.on('connect', () => {
-    console.log('Connected to PostgreSQL (Neon)');
+    logger.info('Connected to PostgreSQL (Neon)');
 });
 
 pool.on('error', (err) => {
-    console.error('Unexpected error on idle PostgreSQL client', err);
+    logger.error('Unexpected error on idle PostgreSQL client', err);
     process.exit(-1);
 });
 
