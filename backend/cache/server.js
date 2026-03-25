@@ -7,6 +7,7 @@ const url = process.env.REDIS_URL || `redis://:${process.env.REDIS_PASSWORD}@${p
 
 const client = createClient({
     url: url,
+    disableOfflineQueue: true,
     socket: {
         // Essential for TLS if URL starts with rediss://
         tls: url.startsWith('rediss://'),
