@@ -366,6 +366,16 @@ const statusStyles = {
     bg: "bg-gray-100",
     text: "text-gray-700",
     border: "border-gray-300"
+  },
+  UPCOMING: {
+     bg: "bg-blue-50",
+     text: "text-blue-600",
+     border: "border-blue-200"
+  },
+  LIVE: {
+     bg: "bg-red-50",
+     text: "text-red-600",
+     border: "border-red-200"
   }
 };
 const resultStyles = {

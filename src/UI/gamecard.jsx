@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { HiChevronDown, HiChevronUp } from "react-icons/hi"
+import { Calendar } from "lucide-react"
 import { statusStyles, resultStyles } from "../../constants"
 import { ChartArea, Play } from "lucide-react"
 import { fetchGames, fetchLeagues } from "../services/api"
@@ -10,9 +11,9 @@ import { cn } from "../admin/layout/Sidebar"
 const GameCard = ({ game }) => {
   const navigate = useNavigate()
   const [expanded, setExpanded] = useState(false)
-  const resultColor = resultStyles[game.result]
+  const resultColor = resultStyles[game.result] || "text-gray-600"
   const statusKey = game.type === "FINAL" ? "FINAL" : game.status
-  const currentStatus = statusStyles[statusKey]
+  const currentStatus = statusStyles[statusKey] || statusStyles["FINAL"] // Fallback to FINAL colors if status is unknown
 
   const gameDate = new Date(game.game_date)
   const day = gameDate.toLocaleString("default", { weekday: "long" })
@@ -34,6 +35,12 @@ const GameCard = ({ game }) => {
     primaryAction = {
       label: "Watch Live",
       icon: <Play className="text-xl" />,
+    }
+  }
+  if (game.status === "UPCOMING") {
+    primaryAction = {
+      label: "Schedule",
+      icon: <Calendar className="text-xl" />,
     }
   }
   let secondaryAction = null
@@ -128,7 +135,7 @@ const GameCard = ({ game }) => {
             </button>
 
             {secondaryAction && (
-              <button 
+              <button
                 onClick={() => navigate(`/game-tracker/${game.id}`)}
                 className="px-6 flex items-center gap-2 py-2 rounded-full border border-orange-500 text-orange-600 font-semibold cursor-pointer transition-all duration-200 hover:bg-orange-600 hover:text-white"
               >
@@ -201,11 +208,11 @@ const GameCard = ({ game }) => {
 
         <div className="border-t p-4 flex flex-cols gap-2 items-center">
           <button className="px-6 flex items-center gap-2 py-2 rounded-full border border-orange-500 text-orange-600 font-semibold transition-all duration-200 hover:bg-orange-600 hover:text-white">
-            <Play className="text-xl" />
-            <span className="uppercase"> Watch Replay</span>
+            {primaryAction.icon}
+            <span className="uppercase"> {primaryAction.label}</span>
           </button>
           {secondaryAction && (
-            <button 
+            <button
               onClick={() => navigate(`/game-tracker/${game.id}`)}
               className="px-6 flex items-center gap-2 py-2 rounded-full border cursor-pointer border-orange-500 text-orange-600 font-semibold transition-all duration-200 hover:bg-orange-600 hover:text-white"
             >
