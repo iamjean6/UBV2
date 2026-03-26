@@ -22,7 +22,7 @@ const generateSlug = (name) => {
 };
 
 // GET all categories
-router.get('/categories', async (req, res) => {
+router.get('/categories', async (req, res, next) => {
     try {
         const result = await pool.query('SELECT * FROM ecommerce.categories ORDER BY name ASC');
         res.status(200).json({
@@ -30,16 +30,12 @@ router.get('/categories', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching categories:', err);
-        res.status(500).json({
-            status: "error",
-            message: "Internal server error while fetching categories"
-        });
+        next(err);
     }
 });
 
 // GET all active products (Public)
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const cachedProducts = await cache.fetchProducts();
         if (cachedProducts) {
@@ -74,16 +70,12 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching products:', err);
-        res.status(500).json({
-            status: "error",
-            message: "Internal server error while fetching products"
-        });
+        next(err);
     }
 });
 
 // GET single product by slug (Public)
-router.get('/:slug', async (req, res) => {
+router.get('/:slug', async (req, res, next) => {
     try {
         const { slug } = req.params;
 
@@ -124,16 +116,12 @@ router.get('/:slug', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error fetching product:', err);
-        res.status(500).json({
-            status: "error",
-            message: "Internal server error while fetching product"
-        });
+        next(err);
     }
 });
 
 // POST Create a new product (Admin)
-router.post('/', protectAdminRoute, logAdminActivity('CREATE_PRODUCT', 'Ecommerce'), async (req, res) => {
+router.post('/', protectAdminRoute, logAdminActivity('CREATE_PRODUCT', 'Ecommerce'), async (req, res, next) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
@@ -218,17 +206,13 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PRODUCT', 'Ecommerc
         });
     } catch (err) {
         await client.query('ROLLBACK');
-        logger.error('Error creating product:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while creating product'
-        });
+        next(err);
     } finally {
         client.release();
     }
 });
 // PUT Update an existing product (Admin)
-router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PRODUCT', 'Ecommerce'), async (req, res) => {
+router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PRODUCT', 'Ecommerce'), async (req, res, next) => {
     const client = await pool.connect();
     try {
         const { id } = req.params;
@@ -326,18 +310,14 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PRODUCT', 'Ecomme
         });
     } catch (err) {
         await client.query('ROLLBACK');
-        logger.error('Error updating product:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while updating product'
-        });
+        next(err);
     } finally {
         client.release();
     }
 });
 
 // DELETE a product (Admin)
-router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PRODUCT', 'Ecommerce'), async (req, res) => {
+router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PRODUCT', 'Ecommerce'), async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -373,11 +353,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PRODUCT', 'Eco
             message: 'Product deleted successfully'
         });
     } catch (err) {
-        logger.error('Error deleting product:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while deleting product'
-        });
+        next(err);
     }
 });
 

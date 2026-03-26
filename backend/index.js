@@ -64,6 +64,8 @@ app.post('/api/payments/mock-callback', mockPaymentCallback);
 
 
 
+import errorHandler from './middleware/errorHandler.js';
+
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
         logger.info('Connected to MongoDB');
@@ -74,3 +76,6 @@ mongoose.connect(process.env.MONGODB_URL)
     .catch((err) => {
         logger.error('Database connection error:', err);
     });
+
+// Global Error Handler (Must be last)
+app.use(errorHandler);

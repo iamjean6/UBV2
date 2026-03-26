@@ -6,7 +6,7 @@ import logger from '../../util/logger.js';
 const router = express.Router();
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const cachedLeagues = await cache.fetchLeagues();
         if (cachedLeagues) {
@@ -22,15 +22,11 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching leagues:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching leagues'
-        });
+        next(err);
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     try {
         const { name, season, created_at } = req.body;
         const result = await pool.query(
@@ -43,14 +39,10 @@ router.post('/', async (req, res) => {
             data: result.rows[0]
         })
     } catch (err) {
-        logger.error('Error creating league:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while creating league'
-        })
+        next(err);
     }
 })
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const { name, season, created_at } = req.body;
@@ -70,15 +62,11 @@ router.put('/:id', async (req, res) => {
             data: result.rows[0]
         })
     } catch (err) {
-        logger.error('Error updating league:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while updating league'
-        });
+        next(err);
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const result = await pool.query(
@@ -97,11 +85,7 @@ router.delete('/:id', async (req, res) => {
             message: "League deleted successfully"
         })
     } catch (err) {
-        logger.error('Error deleting league:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while deleting league'
-        });
+        next(err);
     }
 })
 

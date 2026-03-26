@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import sharp from "sharp";
 import logger from '../util/logger.js';
 
-export const getFeatures = async (req, res) => {
+export const getFeatures = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 12;
@@ -30,12 +30,11 @@ export const getFeatures = async (req, res) => {
 
         return res.status(200).json({ success: true, ...cacheData });
     } catch (err) {
-        logger.error("Error fetching features:", err);
-        return res.status(500).json({ success: false, message: err.message });
+        next(err);
     }
 };
 
-export const getOneStory = async (req, res) => {
+export const getOneStory = async (req, res, next) => {
     try {
         const { id } = req.params;
         const cachedStory = await cache.fetchFeatureDetail(id);
@@ -60,12 +59,11 @@ export const getOneStory = async (req, res) => {
 
         return res.status(200).json({ success: true, data: story });
     } catch (err) {
-        logger.error("Error fetching story", err);
-        return res.status(500).json({ success: false, message: err.message });
+        next(err);
     }
 };
 
-export const createStory = async (req, res) => {
+export const createStory = async (req, res, next) => {
     try {
         const { title, excerpt, content, author, date, videoUrl } = req.body;
         const { file, videoFile } = req.files || {};
@@ -131,12 +129,11 @@ export const createStory = async (req, res) => {
             data: story,
         });
     } catch (err) {
-        logger.error('Error in creating a Feature Story', err);
-        return res.status(500).json({ success: false, message: err.message });
+        next(err);
     }
 };
 
-export const getLikes = async (req, res) => {
+export const getLikes = async (req, res, next) => {
     try {
         const { id } = req.params;
         const cachedLikes = await cache.fetchFeatureLikes(id);
@@ -149,12 +146,11 @@ export const getLikes = async (req, res) => {
 
         return res.status(200).json({ success: true, data: likes });
     } catch (err) {
-        logger.error("Error fetching likes:", err);
-        return res.status(500).json({ success: false, message: err.message });
+        next(err);
     }
 };
 
-export const updateStory = async (req, res) => {
+export const updateStory = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { title, excerpt, content, author, date, videoUrl } = req.body;
@@ -201,12 +197,11 @@ export const updateStory = async (req, res) => {
 
         return res.status(200).json({ success: true, data: updateStory });
     } catch (err) {
-        logger.error("Error updating story:", err);
-        return res.status(500).json({ success: false, message: err.message });
+        next(err);
     }
 };
 
-export const deleteStory = async (req, res) => {
+export const deleteStory = async (req, res, next) => {
     try {
         const { id } = req.params;
         const story = await FeatureStory.findById(id);
@@ -238,7 +233,6 @@ export const deleteStory = async (req, res) => {
             message: "Article deleted successfully"
         });
     } catch (err) {
-        logger.error(err);
-        return res.status(500).json({ status: "error", message: err.message });
+        next(err);
     }
 };

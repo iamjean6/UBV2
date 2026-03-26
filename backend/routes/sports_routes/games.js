@@ -8,7 +8,7 @@ import logger from '../../util/logger.js';
 const router = express.Router();
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const cachedGames = await cache.fetchGames();
         if (cachedGames) {
@@ -36,16 +36,12 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching games:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching games'
-        });
+        next(err);
     }
 });
 
 // GET one game
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const cachedGame = await cache.fetchGameDetail(id);
@@ -77,19 +73,23 @@ router.get('/:id', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error fetching game detail:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching game detail'
-        });
+        next(err);
     }
 });
 
 // CREATE game
-router.post('/', protectAdminRoute, logAdminActivity('CREATE_GAME', 'Sports'), async (req, res) => {
+router.post('/', protectAdminRoute, logAdminActivity('CREATE_GAME', 'Sports'), async (req, res, next) => {
     try {
 
         const { home_team_id, away_team_id, venue, city, game_date, status, home_score, away_score, league_id, our_team } = req.body;
+
+        if (home_team_id === away_team_id) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Home team and away team cannot be the same.'
+            });
+        }
+
         const queryText = `
             INSERT INTO sports.games (home_team_id, away_team_id, venue, city, game_date, status, home_score, away_score, league_id, our_team)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -103,20 +103,23 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_GAME', 'Sports'), a
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error creating game:', err);
-
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while creating game'
-        });
+        next(err);
     }
 });
 
 // UPDATE game
-router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_GAME', 'Sports'), async (req, res) => {
+router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_GAME', 'Sports'), async (req, res, next) => {
     try {
         const { id } = req.params;
         const { home_team_id, away_team_id, venue, city, game_date, status, home_score, away_score, league_id, our_team } = req.body;
+
+        if (home_team_id === away_team_id) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Home team and away team cannot be the same.'
+            });
+        }
+
         const queryText = `
             UPDATE sports.games 
             SET home_team_id = $1, away_team_id = $2, venue = $3, city = $4, game_date = $5, status = $6, home_score = $7, away_score = $8, league_id = $9, our_team = $10
@@ -134,16 +137,12 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_GAME', 'Sports'),
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error updating game:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while updating game'
-        });
+        next(err);
     }
 });
 
 // DELETE game
-router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_GAME', 'Sports'), async (req, res) => {
+router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_GAME', 'Sports'), async (req, res, next) => {
     try {
         const { id } = req.params;
         const result = await pool.query('DELETE FROM sports.games WHERE id = $1 RETURNING *', [id]);
@@ -156,11 +155,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_GAME', 'Sports
             message: 'Game deleted successfully'
         });
     } catch (err) {
-        logger.error('Error deleting game:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while deleting game'
-        });
+        next(err);
     }
 });
 

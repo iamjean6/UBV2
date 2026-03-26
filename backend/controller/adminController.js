@@ -2,7 +2,7 @@ import pool from '../pgdb/db.js';
 import logger from '../util/logger.js';
 
 // Get Dashboard Stats
-export const getDashboardStats = async (req, res) => {
+export const getDashboardStats = async (req, res, next) => {
     try {
         const stats = await Promise.all([
             pool.query('SELECT COUNT(*) FROM sports.teams'),
@@ -21,13 +21,12 @@ export const getDashboardStats = async (req, res) => {
             }
         });
     } catch (err) {
-        logger.error('Error fetching dashboard stats:', err);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
+        next(err);
     }
 };
 
 // Get Player Stats Summary (Leaders & Table)
-export const getPlayerStatsSummary = async (req, res) => {
+export const getPlayerStatsSummary = async (req, res, next) => {
     try {
         const query = `
             SELECT 
@@ -59,7 +58,7 @@ export const getPlayerStatsSummary = async (req, res) => {
         const result = await pool.query(query);
         const players = result.rows.map(p => {
             const fg_pct = p.total_fg_attempts > 0 ? (p.total_fg_made / p.total_fg_attempts * 100).toFixed(1) : '0.0';
-            const three_p_pct = p.total_3p_attempts > 0 ? (p.total_3p_made / p.total_3p_attempts * 100).toFixed(1) : '0.0';
+            const three_p_pct = p.total_3p_attempts > 0 ? (p.total_3p_made / p.total_3p_made / p.total_3p_attempts * 100).toFixed(1) : '0.0';
             const ft_pct = p.total_ft_attempts > 0 ? (p.total_ft_made / p.total_ft_attempts * 100).toFixed(1) : '0.0';
             
             // Efficiency calculation: (PTS + REB + AST + STL + BLK) - ((FGA - FGM) + (FTA - FTM) + TOV)
@@ -103,13 +102,12 @@ export const getPlayerStatsSummary = async (req, res) => {
             }
         });
     } catch (err) {
-        logger.error('Error fetching player stats summary:', err);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
+        next(err);
     }
 };
 
 // Get Admin Activities (Superadmin only)
-export const getAdminActivities = async (req, res) => {
+export const getAdminActivities = async (req, res, next) => {
     try {
         const result = await pool.query(`
             SELECT * FROM auth.admin_activities 
@@ -121,12 +119,11 @@ export const getAdminActivities = async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching admin activities:', err);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
+        next(err);
     }
 };
 // Get System Vitals (Superadmin only)
-export const getSystemVitals = async (req, res) => {
+export const getSystemVitals = async (req, res, next) => {
     try {
         const start = Date.now();
         await pool.query('SELECT 1');
@@ -144,7 +141,6 @@ export const getSystemVitals = async (req, res) => {
             }
         });
     } catch (err) {
-        logger.error('Error fetching system vitals:', err);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
+        next(err);
     }
 };

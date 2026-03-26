@@ -12,7 +12,7 @@ import logger from '../../util/logger.js';
 const router = express.Router();
 
 
-router.post('/', protectAdminRoute, logAdminActivity('CREATE_PLAYER', 'Sports'), async (req, res) => {
+router.post('/', protectAdminRoute, logAdminActivity('CREATE_PLAYER', 'Sports'), async (req, res, next) => {
     try {
         const { first_name, last_name, team_id, jersey_number, position, height, weight_kg, age,
             nickname
@@ -51,16 +51,12 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PLAYER', 'Sports'),
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error creating player:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while creating player'
-        });
+        next(err);
     }
 })
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const cachedPlayers = await cache.fetchPlayers();
         if (cachedPlayers) {
@@ -82,16 +78,12 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching players:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching players'
-        });
+        next(err);
     }
 });
 
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const cachedPlayer = await cache.fetchPlayerDetail(id);
@@ -117,15 +109,11 @@ router.get('/:id', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error fetching player detail:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching player detail'
-        });
+        next(err);
     }
 });
 
-router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PLAYER', 'Sports'), async (req, res) => {
+router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PLAYER', 'Sports'), async (req, res, next) => {
     try {
         const { id } = req.params;
         const { first_name, last_name, team_id, jersey_number, position, height, weight_kg, age,
@@ -185,15 +173,11 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PLAYER', 'Sports'
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error updating player:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while updating player'
-        });
+        next(err);
     }
 })
 
-router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PLAYER', 'Sports'), async (req, res) => {
+router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PLAYER', 'Sports'), async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -226,11 +210,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PLAYER', 'Spor
             message: 'Player deleted successfully'
         });
     } catch (err) {
-        logger.error('Error deleting player:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while deleting player'
-        });
+        next(err);
     }
 })
 

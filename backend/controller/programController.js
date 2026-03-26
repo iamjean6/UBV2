@@ -7,7 +7,7 @@ import cache from '../cache/cache.js';
 import sharp from 'sharp';
 import logger from '../util/logger.js';
 
-export const getPrograms = async (req, res) => {
+export const getPrograms = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 12;
@@ -35,11 +35,11 @@ export const getPrograms = async (req, res) => {
         })
     } catch (err) {
         logger.error(err)
-        return res.status(500).json({ "status": "error", "message": err.message })
+        next(err);
     }
 }
 
-export const getOneProgram = async (req, res) => {
+export const getOneProgram = async (req, res, next) => {
     try {
         const { id } = req.params
         const cachedProgram = await cache.fetchProgramDetail(id);
@@ -69,13 +69,23 @@ export const getOneProgram = async (req, res) => {
         })
     } catch (err) {
         logger.error(err)
-        return res.status(500).json({ "status": "error", "message": err.message })
+        next(err);
     }
 }
 
-export const createProgram = async (req, res) => {
+export const createProgram = async (req, res, next) => {
     try {
         const { title, synopsis } = req.body
+        
+        // Check if program title already exists
+        const checkProgram = await program.findOne({ title });
+        if (checkProgram) {
+            return res.status(400).json({
+                "status": "error",
+                "message": `Program with title "${title}" already exists.`
+            });
+        }
+
         const { file } = req.files || {}
         const galleryFiles = req.files?.galleryFiles; // Can be single or array
         const fileName = "images/" + v4()
@@ -131,11 +141,11 @@ export const createProgram = async (req, res) => {
         })
     } catch (err) {
         logger.error('Error in createProgram:', err);
-        return res.status(500).json({ "status": "error", "message": err.message })
+        next(err);
     }
 }
 
-export const updateProgram = async (req, res) => {
+export const updateProgram = async (req, res, next) => {
     try {
         const { id } = req.params
         const { title, synopsis } = req.body
@@ -196,12 +206,12 @@ export const updateProgram = async (req, res) => {
         })
     } catch (err) {
         logger.error(err)
-        return res.status(500).json({ "status": "error", "message": err.message })
+        next(err);
     }
 }
 
 
-export const deleteProgram = async (req, res) => {
+export const deleteProgram = async (req, res, next) => {
     try {
         const { id } = req.params
         const event = await program.findById(id)
@@ -228,7 +238,7 @@ export const deleteProgram = async (req, res) => {
         })
     } catch (err) {
         logger.error(err)
-        return res.status(500).json({ "status": "error", "message": err.message })
+        next(err);
     }
 }
 

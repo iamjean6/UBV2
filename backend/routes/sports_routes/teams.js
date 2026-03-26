@@ -12,7 +12,7 @@ import logger from '../../util/logger.js';
 const router = express.Router();
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const cachedTeams = await cache.fetchTeams();
         if (cachedTeams) {
@@ -28,15 +28,11 @@ router.get('/', async (req, res) => {
             data: result.rows
         });
     } catch (err) {
-        logger.error('Error fetching teams:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching teams'
-        });
+        next(err);
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const cachedTeam = await cache.fetchTeamDetail(id);
@@ -56,15 +52,11 @@ router.get('/:id', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Error fetching team detail:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while fetching team detail'
-        });
+        next(err);
     }
 });
 
-router.post('/', protectAdminRoute, logAdminActivity('CREATE_TEAM', 'Sports'), async (req, res) => {
+router.post('/', protectAdminRoute, logAdminActivity('CREATE_TEAM', 'Sports'), async (req, res, next) => {
     try {
         const { name, city } = req.body;
         const files = req.files || {};
@@ -90,15 +82,11 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_TEAM', 'Sports'), a
             data: result.rows[0]
         })
     } catch (err) {
-        logger.error('Error creating teams:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while creating team'
-        })
+        next(err);
     }
 })
 
-router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_TEAM', 'Sports'), async (req, res) => {
+router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_TEAM', 'Sports'), async (req, res, next) => {
     try {
         const { id } = req.params;
         const { name, city } = req.body;
@@ -136,15 +124,11 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_TEAM', 'Sports'),
             data: result.rows[0]
         })
     } catch (err) {
-        logger.error('Error updating team:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while updating team'
-        });
+        next(err);
     }
 })
 
-router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_TEAM', 'Sports'), async (req, res) => {
+router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_TEAM', 'Sports'), async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -171,11 +155,7 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_TEAM', 'Sports
             message: "Team deleted successfully"
         })
     } catch (err) {
-        logger.error('Error deleting team:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error while deleting team'
-        });
+        next(err);
     }
 })
 

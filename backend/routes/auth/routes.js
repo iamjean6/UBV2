@@ -10,7 +10,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const router = express.Router();
 
 // Google OAuth Route
-router.post('/google', async (req, res) => {
+router.post('/google', async (req, res, next) => {
     const { token } = req.body;
 
     if (!token) {
@@ -66,12 +66,11 @@ router.post('/google', async (req, res) => {
             }
         });
     } catch (error) {
-        logger.error('Google Auth Error:', error);
-        res.status(401).json({ status: 'error', message: 'Invalid Google Token' });
+        next(error);
     }
 });
 // Registration Route
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -114,16 +113,12 @@ router.post('/register', async (req, res) => {
             data: result.rows[0]
         });
     } catch (err) {
-        logger.error('Registration error:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error'
-        });
+        next(err);
     }
 });
 
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     const { name, password } = req.body;
 
     if (!name || !password) {
@@ -174,16 +169,12 @@ router.post('/login', async (req, res) => {
             }
         });
     } catch (err) {
-        logger.error('Login error:', err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error'
-        });
+        next(err);
     }
 });
 
 // Admin Login Route
-router.post('/admin/login', async (req, res) => {
+router.post('/admin/login', async (req, res, next) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -224,8 +215,7 @@ router.post('/admin/login', async (req, res) => {
             }
         });
     } catch (err) {
-        logger.error('Admin Login Error:', err);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
+        next(err);
     }
 });
 

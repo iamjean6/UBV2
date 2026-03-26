@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import toast from 'react-hot-toast';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '/api';
 
 const api = axios.create({
@@ -19,6 +21,34 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+
+// Response interceptor for global error handling
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            const { status, data } = error.response;
+            const message = data.message || 'An error occurred';
+
+            if (status === 401) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminUser');
+                toast.error('Session expired. Please login again.');
+                window.location.href = '/admin/login';
+            } else {
+                toast.error(message);
+            }
+
+            return Promise.reject({
+                ...error,
+                message: message
+            });
+        }
+        toast.error('Network error. Please check your connection.');
         return Promise.reject(error);
     }
 );
