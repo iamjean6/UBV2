@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { Users as UsersIcon, ShoppingCart, Trophy, Activity, Star, Award, Zap, Target, Percent } from 'lucide-react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || process.env.BACKEND_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '/api';
 
 export default function Dashboard() {
     const [stats, setStats] = useState(null);

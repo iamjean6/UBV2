@@ -112,7 +112,7 @@ const Programs = () => {
 
       <div
         className="relative min-h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/img/badge2.jpeg')" }}
+        style={{ backgroundImage: "url('/img/badge2.webp')" }}
       >
         <div className="absolute inset-0 bg-black/50" />
 

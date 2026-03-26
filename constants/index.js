@@ -715,26 +715,26 @@ const values = [
     id: "community",
     label: "COMMUNITY",
     description: "We are committed to making a meaningful difference in the communities we serve, investing in people and programs that create lasting impact."
-    , bg: '/img/cube.jpg'
+    , bg: '/img/camp4.webp'
   },
   {
     id: "innovation",
     label: "INNOVATION",
     description: "We embrace new ideas, technologies, and approaches that push boundaries and keep us ahead of the game in everything we do.",
-    bg: "/img/einstein.jpg"
+    bg: "/img/content2.webp"
   },
   {
     id: "legendary",
     label: "LEGENDARY",
     description: "We pursue excellence relentlessly — setting the standard for what it means to be truly great on and off the court.",
-    bg: "/img/hoops.jpg"
+    bg: "/img/pic2.webp"
   },
   {
     id: "teamwork",
     label: "TEAMWORK",
     description:
-      "We foster a collaborative environment that allows for creativity in approach, ideas and suggestions for the greater good of the Orlando Magic and the Central Florida community.",
-    bg: "/img/innovation.jpg"
+      "We foster a collaborative environment that allows for creativity in approach, ideas and suggestions for the greater good of Kisumu and Kenya at large.",
+    bg: "/img/camp3.webp"
   },
 ];
 const principles = [

@@ -7,12 +7,12 @@ import Pagination from '../UI/pagination';
 
 const Merch = () => {
   const Images = [
-    "/img/shop.jpg",
-    "img/merch1.jpg",
-    "img/merch2.jpg",
-    "img/merch3.jpg",
-    "img/merch4.jpg",
-    "img/merch5.jpg",
+    "/img/shop.webp",
+    "/img/merch1.webp",
+    "/img/merch2.webp",
+    "/img/merch3.webp",
+    "/img/merch4.webp",
+    "/img/merch5.webp",
   ];
   const [currentSlide, setCurrentSlide] = useState(0);
   const [liked, setLiked] = useState({});

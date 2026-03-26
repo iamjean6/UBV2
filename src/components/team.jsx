@@ -8,7 +8,7 @@ const Team = () => {
       <div className='max-w-7xl mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 items-center'>
           <div className='overflow-hidden bg-gray-100 h-full'>
-            <img src="/img/Mark.png"
+            <img src="/img/Mark.webp"
               className='w-full h-[550px] object-cover overflow-hidden rounded-sm'
               alt="" srcset="" />
           </div>
@@ -42,9 +42,7 @@ const Team = () => {
             </div>
 
             <div className='flex items-center gap-2'>
-              <button className="px-8 py-3 border border-white text-sm text-white font-semibold uppercase tracking-wide hover:bg-blue-800 hover:text-black hover:cursor-pointer transition">
-                View Profile
-              </button>
+
               <Link to="/roster">
                 <Button
                   id="Meet the Team"

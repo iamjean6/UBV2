@@ -33,17 +33,17 @@ const ContactPage = () => {
   const modalRef = useRef(null)
   const [activeCard, setActiveCard] = useState(null);
   const [bannerVisible, setBannerVisible] = useState(false);
-  const openCard = () =>{
-     setActiveCard({
-    image: "/img/badge.jpeg",
-    title: "Get In Touch",
-    synopsis:
-      "For collaborations, press inquiries, or general questions, please reach out to us via email and our team will respond as soon as possible."
-  });
+  const openCard = () => {
+    setActiveCard({
+      image: "/img/badge1.webp",
+      title: "Get In Touch",
+      synopsis:
+        "For collaborations, press inquiries, or general questions, please reach out to us via email and our team will respond as soon as possible."
+    });
   }
   const closeCard = () => {
-  setActiveCard(null);
-};
+    setActiveCard(null);
+  };
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -58,26 +58,26 @@ const ContactPage = () => {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-  const handleEsc = (e) => {
-    if (e.key === "Escape") closeCard();
-  };
+    const handleEsc = (e) => {
+      if (e.key === "Escape") closeCard();
+    };
 
-  const handleClickOutside = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      closeCard();
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        closeCard();
+      }
+    };
+
+    if (activeCard) {
+      document.addEventListener("keydown", handleEsc);
+      document.addEventListener("mousedown", handleClickOutside);
     }
-  };
 
-  if (activeCard) {
-    document.addEventListener("keydown", handleEsc);
-    document.addEventListener("mousedown", handleClickOutside);
-  }
-
-  return () => {
-    document.removeEventListener("keydown", handleEsc);
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [activeCard]);
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [activeCard]);
 
   return (
     <section className="relative overflow-hidden bg-[#f1f1f1]">
@@ -89,7 +89,7 @@ const ContactPage = () => {
           </h1>
         </div>
 
-    
+
         <div className="relative grid grid-cols-1 md:grid-cols-[180px_1fr_1fr] gap-8 mt-8">
 
           {/* ── COL 1: Intro text ── order-2 on mobile so image stays first ── */}
@@ -168,7 +168,7 @@ const ContactPage = () => {
           </div>
           <div className="relative order-1 md:order-3 w-full h-[75vw] md:h-auto">
             <img
-              src="/img/shai.png"
+              src="/img/shai.webp"
               alt="JUUN.J model"
               className="w-full h-full md:absolute md:right-0 md:top-[-60px] md:h-auto object-contain object-top"
               style={{ filter: "grayscale(100%)" }}
@@ -184,7 +184,7 @@ const ContactPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.05),rgba(0,0,0,0.15))] pointer-events-none" />
 
         <img
-          src="/img/kyrie.png"
+          src="/img/kyrie.webp"
           alt=""
           aria-hidden="true"
           className="claim-model--left absolute bottom-0 left-0 object-contain object-bottom"
@@ -202,51 +202,51 @@ const ContactPage = () => {
         </button>
 
         <img
-          src="/img/steph.png"
+          src="/img/steph.webp"
           alt=""
           aria-hidden="true"
           className="claim-model--right absolute bottom-0 right-0 object-contain object-bottom"
           style={{ filter: "grayscale(100%)" }}
         />
       </div>
-        {activeCard && (
-                  <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
-                    <div
-                      ref={modalRef}
-                      className="bg-neutral-900 text-white max-w-4xl w-full h-[420px] rounded-xl overflow-hidden grid grid-cols-2 "
-                    >
-                      <div className="relative h-[420px] md:h-full">
-                        <img
-                          src={activeCard.image}
-                          alt={activeCard.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-      
-                        <button
-                          onClick={closeCard}
-                          className="absolute top-4 left-4 z-10 w-9 h-9 rounded-full hover:text-black  text-white flex items-center justify-center  hover:cursor-pointer hover:scale-105 active:scale-95 transition"
-                        >
-                          <HiX className="w-8 h-8 " />
-                        </button>
-      
-                        <div className="absolute inset-0 bg-black/20" />
-                      </div>
-                      <div className="p-6 md:p-8 flex flex-col justify-center space-y-4">
-                        <h3 className="text-4xl md:text-5xl font-bold text-orange-600 uppercase font-barlow">
-                          {activeCard.title}
-                        </h3>
-      
-                        <p className="text-neutral-300 leading-relaxed">
-                          {activeCard.synopsis}
-                        </p>
-                        <form action="">
-                            
-                        </form>
-                        <Button 
-                        title={'Send us a message'}
-                        id='Send us  a message'
-                        leftIcon={<MessageCircle />}
-                         containerClass="mt-4
+      {activeCard && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
+          <div
+            ref={modalRef}
+            className="bg-neutral-900 text-white max-w-4xl w-full h-[420px] rounded-xl overflow-hidden grid grid-cols-2 "
+          >
+            <div className="relative h-[420px] md:h-full">
+              <img
+                src={activeCard.image}
+                alt={activeCard.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+
+              <button
+                onClick={closeCard}
+                className="absolute top-4 left-4 z-10 w-9 h-9 rounded-full hover:text-black  text-white flex items-center justify-center  hover:cursor-pointer hover:scale-105 active:scale-95 transition"
+              >
+                <HiX className="w-8 h-8 " />
+              </button>
+
+              <div className="absolute inset-0 bg-black/20" />
+            </div>
+            <div className="p-6 md:p-8 flex flex-col justify-center space-y-4">
+              <h3 className="text-4xl md:text-5xl font-bold text-orange-600 uppercase font-barlow">
+                {activeCard.title}
+              </h3>
+
+              <p className="text-neutral-300 leading-relaxed">
+                {activeCard.synopsis}
+              </p>
+              <form action="">
+
+              </form>
+              <Button
+                title={'Send us a message'}
+                id='Send us  a message'
+                leftIcon={<MessageCircle />}
+                containerClass="mt-4
                          inline-flex items-center justify-center 
                          px-8 py-4 
                          !bg-white-500 
@@ -257,14 +257,14 @@ const ContactPage = () => {
                          !hover:bg-green-300 
                          transition
                          "
-                         />
-                        
-                      </div>
-                    </div>
-                  </div>
-                )}
+              />
 
-     
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
     </section>
   );
