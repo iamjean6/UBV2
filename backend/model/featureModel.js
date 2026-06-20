@@ -30,6 +30,7 @@ const FeatureStorySchema = new mongoose.Schema({
     videoKey: {
         type: String
     },
+
     likes: {
         type: Number,
         default: 0

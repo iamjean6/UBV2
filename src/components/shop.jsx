@@ -50,6 +50,7 @@ const Shop = () => {
           return (<div key={product.id} className='flex flex-col'>
             <div className='relative w-full h-[500px] bg-gray-100 overflow-hidden self-start'>
               <img
+                loading="lazy"
                 src={displayImage(product)}
                 alt={product.name}
                 className='w-full h-full object-cover'

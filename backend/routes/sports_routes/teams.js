@@ -3,6 +3,7 @@ import pool from '../../pgdb/db.js'
 import cache from '../../cache/cache.js'
 import { v4 as uuidv4 } from 'uuid'
 import { putObject } from '../../util/putObject.js'
+import { uploadOptimizedImages } from '../../util/uploadOptimizedImages.js'
 import { deleteObject } from '../../util/deleteObject.js'
 import { protectAdminRoute } from '../../middleware/authMiddleware.js'
 import { logAdminActivity } from '../../middleware/adminActivityLogger.js'
@@ -63,12 +64,8 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_TEAM', 'Sports'), a
         let final_logo_url = req.body.logo_url || null;
 
         if (files.logo) {
-            const fileName = `teams/logos/${uuidv4()}.webp`;
-            const optimized = await sharp(files.logo.data)
-                .resize(400, 400, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-                .webp({ quality: 80 })
-                .toBuffer();
-            const upload = await putObject(optimized, fileName, 'image/webp');
+            const baseFileName = `teams/logos/${uuidv4()}`;
+            const upload = await uploadOptimizedImages(files.logo.data, baseFileName, 400, 400, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } });
             if (upload) final_logo_url = upload.url;
         }
 
@@ -105,12 +102,8 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_TEAM', 'Sports'),
                 const oldKey = currentTeam.rows[0].logo_url.split('.com/')[1];
                 await deleteObject(oldKey);
             }
-            const fileName = `teams/logos/${uuidv4()}.webp`;
-            const optimized = await sharp(files.logo.data)
-                .resize(400, 400, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-                .webp({ quality: 80 })
-                .toBuffer();
-            const upload = await putObject(optimized, fileName, 'image/webp');
+            const baseFileName = `teams/logos/${uuidv4()}`;
+            const upload = await uploadOptimizedImages(files.logo.data, baseFileName, 400, 400, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } });
             if (upload) final_logo_url = upload.url;
         }
 

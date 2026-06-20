@@ -301,15 +301,15 @@ const Checkout = () => {
                                 </button>
                                 {/* PayPal */}
                                 <button onClick={() => setActiveTab('paypal')} className={tabButtonClass('paypal', 'bg-blue-600')}>
-                                    <img src="/img/paypal.png" className="w-10 h-10 object-contain" alt="PayPal" />
+                                    <img src="/img/paypal.webp" className="w-10 h-10 object-contain" alt="PayPal" />
                                 </button>
                                 {/* M-Pesa */}
                                 <button onClick={() => setActiveTab('mpesa')} className={tabButtonClass('mpesa', 'bg-green-600')}>
-                                    <img src="/img/mpesa.png" className="w-10 h-10 object-contain" alt="M-Pesa" />
+                                    <img src="/img/mpesa.webp" className="w-10 h-10 object-contain" alt="M-Pesa" />
                                 </button>
                                 {/* Google Pay */}
                                 <button onClick={() => setActiveTab('google')} className={tabButtonClass('google', 'bg-orange-600')}>
-                                    <img src="/img/google.png" className="w-10 h-10 object-contain" alt="Google Pay" />
+                                    <img src="/img/google.webp" className="w-10 h-10 object-contain" alt="Google Pay" />
                                 </button>
                             </div>
                         </div>
@@ -365,7 +365,7 @@ const Checkout = () => {
                                                     className="w-20 bg-white/70 border border-gray-300 rounded-xl py-3 px-4 focus:ring-2 focus:ring-black outline-none transition-all"
                                                 />
                                                 <img src="/img/visa.svg" className="w-10 h-10" alt="Visa" />
-                                                <img src="/img/mastercard.png" className="w-10 h-7" alt="Mastercard" />
+                                                <img src="/img/mastercard.webp" className="w-10 h-7" alt="Mastercard" />
                                             </div>
                                         </div>
                                     </div>
@@ -391,7 +391,7 @@ const Checkout = () => {
                         {activeTab === 'paypal' && (
                             <div>
                                 <div className="flex justify-between items-center px-2 mb-3">
-                                    <img src="/img/paypallogo.png" alt="PayPal logo" className="w-28 h-20 object-contain" />
+                                    <img src="/img/paypallogo.webp" alt="PayPal logo" className="w-28 h-20 object-contain" />
                                     <div className="flex items-center gap-3">
                                         <ShoppingCart size={20} />
                                         <span className="text-gray-800 text-lg font-bold">KSH {grandTotal.toLocaleString()}</span>
@@ -418,7 +418,7 @@ const Checkout = () => {
                                 </div>
 
                                 <div className="flex items-center gap-6 px-2 py-3">
-                                    <img src="/img/mastercard.png" className="w-14 h-10 object-contain" alt="Mastercard" />
+                                    <img src="/img/mastercard.webp" className="w-14 h-10 object-contain" alt="Mastercard" />
                                     <img src="/img/visa.svg" className="w-14 h-10 object-contain" alt="Visa" />
                                     <img src="/img/AMEX.svg" className="w-14 h-10 rounded-sm object-contain" alt="Amex" />
                                 </div>
@@ -484,7 +484,7 @@ const Checkout = () => {
                         {/* ── M-PESA TAB ─────────────────────────────────────────────── */}
                         {activeTab === 'mpesa' && (
                             <div className="px-2 py-2 text-center space-y-3">
-                                <img src="/img/mpesapay.png" className="h-full w-full rounded-sm" alt="Lipa Na M-Pesa" />
+                                <img src="/img/mpesapay.webp" className="h-full w-full rounded-sm" alt="Lipa Na M-Pesa" />
                                 <h3 className="font-barlow text-3xl font-black">M-PESA Payment</h3>
                                 <p className="font-barlow text-base text-gray-600">Please complete payment for:</p>
 
@@ -541,7 +541,7 @@ const Checkout = () => {
                         {activeTab === 'google' && (
                             <div className="space-y-4 text-sm">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <img src="/img/google.png" className="w-10 h-10 object-contain" alt="Google Pay" />
+                                    <img src="/img/google.webp" className="w-10 h-10 object-contain" alt="Google Pay" />
                                     <div>
                                         <h3 className="font-bold text-lg">Google Pay</h3>
                                         <p className="text-gray-500 text-xs">Fast, secure checkout with Google</p>

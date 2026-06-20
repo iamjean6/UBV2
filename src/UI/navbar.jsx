@@ -4,6 +4,7 @@ import { Coins, LogIn, ShoppingCart } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleStatusTab } from '../store/cart'
 import Sidebar from './sidebar';
+import ImageComponent from './imagecomponent';
 const Navbar = () => {
 
   const location = useLocation()
@@ -35,17 +36,16 @@ const Navbar = () => {
     carts.forEach(items => total += items.quantity)
     setTotalQuantity(total)
   }, [carts])
-  const handleLogoClick = () => {
-    navigate("/easter")
-  }
+ 
   return (
     <nav className={`w-full z-50 transition-all duration-300   ${isHome ? "absolute top-0 left-0" : "relative"} ${navbarBg}`}>
 
       <div className=" mx-auto px-4 sm:px-6 text-black lg:px-8">
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-3 px-2 py-4 ' onClick={handleLogoClick}>
-            <img src="/img/badge1.webp" alt="Urbanville Logo"
+          <div className='flex items-center gap-3 px-2 py-4 '>
+            <ImageComponent src="/img/badge1.webp" alt="Urbanville Logo"
               className='w-15 h-15 bg-white rounded-full flex-shrink-0'
+              
             />
             <p className={`hidden md:block  font-zentry text-xl font-bold uppercase tracking-wide ${textColor}`}>
               Urbanville Basketball

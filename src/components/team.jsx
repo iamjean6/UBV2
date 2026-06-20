@@ -8,7 +8,7 @@ const Team = () => {
       <div className='max-w-7xl mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 items-center'>
           <div className='overflow-hidden bg-gray-100 h-full'>
-            <img src="/img/Mark.webp"
+            <img loading="lazy" src="/img/Mark.webp"
               className='w-full h-[550px] object-cover overflow-hidden rounded-sm'
               alt="" srcset="" />
           </div>
@@ -35,9 +35,9 @@ const Team = () => {
               </h3>
 
               <p className="text-white leading-relaxed">
-                Lorem ipsum dolor sit amet, vis an altera torquatos, vel assum nostrum
-                eleifend at. Choro posidonium vix et, ei mei iisque antiopam comprehensam.
-                Putent repudiandae ei sed, eu vis accusamus sadipscing mea.
+              Mark Obondi is a seasoned and experienced power forward for Urbanville Basketball. He is a professional on and
+              off the court . He is also the senior captain who leads with purpose and desire  to see his
+              teammates grow on and off the court. 
               </p>
             </div>
 

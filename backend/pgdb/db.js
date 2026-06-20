@@ -14,8 +14,7 @@ const pool = new Pool({
         rejectUnauthorized: false,
     },
     connectionTimeoutMillis: 30000, // Wait 30s for Neon cold start
-    idleTimeoutMillis: 30000,      // Close idle clients after 30s
-    max: 10                        // Limit pool size
+    idleTimeoutMillis: 30000,      // Close idle clients after 30s                    // Limit pool size
 });
 
 // Helper to log connection status

@@ -3,25 +3,25 @@ import React, { useEffect, useRef, useState } from "react";
 const left = [
   { img: "/img/easter/shai (2).png" },
   { img: "/img/easter/Kobe (2).png" },
-  { img: "/img/easter/ibra.png" },
-  { img: "/img/easter/rocky.png" },
-  { img: "/img/easter/hulvey.png" },
-  { img: "/img/easter/korra.png" },
-  { img: "/img/easter/drogba.png" },
-  { img: "/img/easter/dog.png" },
-  { img: "/img/easter/spiderman.png" }
+  { img: "/img/easter/ibra.webp" },
+  { img: "/img/easter/rocky.webp" },
+  { img: "/img/easter/hulvey.webp" },
+  { img: "/img/easter/korra.webp" },
+  { img: "/img/easter/drogba.webp" },
+  { img: "/img/easter/dog.webp" },
+  { img: "/img/easter/spiderman.webp" }
 ];
 
 const right = [
-  { img: "/img/easter/brunson.png" },
-  { img: "/img/easter/larry.png" },
-  { img: "/img/easter/cr7.png" },
-  { img: "/img/easter/goggins.png" },
-  { img: "/img/easter/forrest.png" },
-  { img: "/img/easter/jack.png" },
-  { img: "/img/easter/cole.png" },
-  { img: "/img/easter/cat.png" },
-    { img: "/img/easter/cap.png" }
+  { img: "/img/easter/brunson.webp" },
+  { img: "/img/easter/larry.webp" },
+  { img: "/img/easter/cr7.webp" },
+  { img: "/img/easter/goggins.webp" },
+  { img: "/img/easter/forrest.webp" },
+  { img: "/img/easter/jack.webp" },
+  { img: "/img/easter/cole.webp" },
+  { img: "/img/easter/cat.webp" },
+    { img: "/img/easter/cap.webp" }
 ];
 
 const Easter = () => {
@@ -90,7 +90,7 @@ const Easter = () => {
       {/* CENTER CONTENT */}
       <div className="relative z-10 flex flex-col items-center py-4 text-center">
         <img
-          src="/img/easter/yeshua.jpg"
+          src="/img/easter/yeshua.webp"
           alt=""
           className="w-20 md:w-44 rounded-full mb-6 shadow-xl"
         />

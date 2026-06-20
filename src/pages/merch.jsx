@@ -202,6 +202,7 @@ const Merch = () => {
             <div className='relative w-full h-[350px] bg-gray-100 overflow-hidden'>
               <Link to={`/shop/${product.slug}`}>
                 <img
+                  loading="lazy"
                   src={displayImage(product)}
                   alt={product.name}
                   className='w-full h-full object-cover transition duration-500 hover:scale-105'

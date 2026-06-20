@@ -1,12 +1,12 @@
 import program from '../model/programModel.js';
 import { v4 } from 'uuid';
 import { putObject } from '../util/putObject.js';
+import { uploadOptimizedImages } from '../util/uploadOptimizedImages.js';
 import { getObject } from '../util/getObject.js';
 import { deleteObject } from '../util/deleteObject.js';
 import cache from '../cache/cache.js';
 import sharp from 'sharp';
 import logger from '../util/logger.js';
-
 export const getPrograms = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -97,13 +97,8 @@ export const createProgram = async (req, res, next) => {
             })
         }
 
-        // Optimize main image
-        const optimizedBuffer = await sharp(file.data)
-            .resize(1200, null, { withoutEnlargement: true })
-            .webp({ quality: 80 })
-            .toBuffer();
-
-        const uploadResult = await putObject(optimizedBuffer, fileName + '.webp');
+        // Optimize and upload main image
+        const uploadResult = await uploadOptimizedImages(file.data, fileName);
         if (!uploadResult || !uploadResult.url) {
             return res.status(500).json({
                 "status": "error",
@@ -116,12 +111,10 @@ export const createProgram = async (req, res, next) => {
             const filesToUpload = Array.isArray(galleryFiles) ? galleryFiles : [galleryFiles];
             for (const gFile of filesToUpload) {
                 const gFileName = "gallery/" + v4();
-                const gOptimized = await sharp(gFile.data)
-                    .resize(1200, null, { withoutEnlargement: true })
-                    .webp({ quality: 80 })
-                    .toBuffer();
-                const gResult = await putObject(gOptimized, gFileName + '.webp');
-                if (gResult?.url) galleryUrls.push(gResult.url);
+                const gResult = await uploadOptimizedImages(gFile.data, gFileName);
+                if (gResult?.url) {
+                    galleryUrls.push(gResult.url);
+                }
             }
         }
 
@@ -164,12 +157,8 @@ export const updateProgram = async (req, res, next) => {
         let currentImages = [...event.images];
 
         if (files.file) {
-            const fileName = "images/" + v4() + ".webp";
-            const optimizedBuffer = await sharp(files.file.data)
-                .resize(1200, null, { withoutEnlargement: true })
-                .webp({ quality: 80 })
-                .toBuffer();
-            const uploadResult = await putObject(optimizedBuffer, fileName)
+            const baseFileName = "images/" + v4();
+            const uploadResult = await uploadOptimizedImages(files.file.data, baseFileName);
             if (uploadResult && uploadResult.url) {
                 updateData.image = uploadResult.url;
                 updateData.key = uploadResult.key;
@@ -184,13 +173,11 @@ export const updateProgram = async (req, res, next) => {
         if (galleryFiles) {
             const filesToUpload = Array.isArray(galleryFiles) ? galleryFiles : [galleryFiles];
             for (const gFile of filesToUpload) {
-                const gFileName = "gallery/" + v4() + ".webp";
-                const gOptimized = await sharp(gFile.data)
-                    .resize(1200, null, { withoutEnlargement: true })
-                    .webp({ quality: 80 })
-                    .toBuffer();
-                const gResult = await putObject(gOptimized, gFileName);
-                if (gResult?.url) currentImages.push(gResult.url);
+                const gFileName = "gallery/" + v4();
+                const gResult = await uploadOptimizedImages(gFile.data, gFileName);
+                if (gResult?.url) {
+                    currentImages.push(gResult.url);
+                }
             }
         }
 

@@ -3,6 +3,7 @@ import pool from '../../pgdb/db.js';
 import cache from '../../cache/cache.js';
 import { v4 as uuidv4 } from 'uuid';
 import { putObject } from '../../util/putObject.js';
+import { uploadOptimizedImages } from '../../util/uploadOptimizedImages.js';
 import { deleteObject } from '../../util/deleteObject.js';
 import { protectAdminRoute } from '../../middleware/authMiddleware.js';
 import { logAdminActivity } from '../../middleware/adminActivityLogger.js';
@@ -176,8 +177,8 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PRODUCT', 'Ecommerc
 
             for (let i = 0; i < imagesToUpload.length; i++) {
                 const file = imagesToUpload[i];
-                const fileName = `products/images/${uuidv4()}_${file.name}`;
-                const upload = await putObject(file.data, fileName, file.mimetype);
+                const baseFileName = `products/images/${uuidv4()}`;
+                const upload = await uploadOptimizedImages(file.data, baseFileName);
 
                 if (upload) {
                     const is_primary = i === 0; // First image is primary by default
@@ -277,8 +278,8 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PRODUCT', 'Ecomme
 
             for (let i = 0; i < imagesToUpload.length; i++) {
                 const file = imagesToUpload[i];
-                const fileName = `products/images/${uuidv4()}_${file.name}`;
-                const upload = await putObject(file.data, fileName, file.mimetype);
+                const baseFileName = `products/images/${uuidv4()}`;
+                const upload = await uploadOptimizedImages(file.data, baseFileName);
 
                 if (upload) {
                     const imgQuery = `

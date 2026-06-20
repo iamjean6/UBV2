@@ -1,5 +1,5 @@
 import PlayerCard from "../UI/playercard";
-import { management, coaches } from "../../constants";
+import { management, coaches, captains } from "../../constants";
 import { useEffect, useState } from "react";
 import Coachescard from "../UI/coachescard";
 import { fetchPlayers, fetchTeams, fetchPlayerAverages } from "../services/api";
@@ -134,7 +134,18 @@ const Roster = () => {
           <Coachescard key={index} staff={staff} />
         ))}
       </div>
-
+      <div className="border-t  border-gray-200 "></div>
+      <div>
+        <h1 className="text-3xl py-4 font-bold text-orange-600 tracking-tight">
+          Captains
+        </h1>
+      </div>
+      <div className="border-t  border-gray-200 pb-16"></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-4">
+        {captains.map((staff, index) => (
+          <Coachescard key={index} staff={staff} />
+        ))}
+      </div>
     </section>
   );
 };

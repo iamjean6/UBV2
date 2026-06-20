@@ -117,7 +117,7 @@ export default function GameSummary({ game }) {
                                 {stats.map(s => (
                                     <tr key={s.id} className="hover:bg-[var(--muted)]/20">
                                         <td className="py-1.5 flex items-center gap-2">
-                                            <img src={s.image_url || '/img/picture.avif'} alt="" className="w-10 h-10 object-cover rounded-full" />
+                                            <img src={s.image_url || '/img/picture.webp'} alt="" className="w-10 h-10 object-cover rounded-full" />
                                             <div>
                                                 <div className="font-semibold text-sm text-[var(--foreground)]">{s.first_name} {s.last_name}</div>
                                                 <span className="text-[10px] font-industry font-black text-[var(--muted-foreground)]">#{s.jersey_number}</span>

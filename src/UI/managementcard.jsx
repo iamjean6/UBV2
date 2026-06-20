@@ -1,6 +1,6 @@
 import React from 'react';
 import {Volume2} from 'lucide-react'
-
+import ImageComponent from './imagecomponent';
 const Managementcard = ({coach}) => {
   const handlePlayAudio = () => {
   const audio = new Audio(coach.audio);
@@ -10,7 +10,7 @@ const Managementcard = ({coach}) => {
     <div className='w-full font-barlow rounded-xl shadow-md overflow-hidden border border-gray-200'>
       <div className='flex items-center gap-2'>
         <div className='w-1/2'>
-            <img src={coach.img} 
+            <ImageComponent src={coach.img} 
             className='h-64 object-contain '
             />
         </div>

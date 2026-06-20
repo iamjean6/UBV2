@@ -166,6 +166,7 @@ const Programs = () => {
               >
                 <div className="relative h-[420px] md:h-full">
                   <img
+                    loading="lazy"
                     src={activeCard.image}
                     alt={activeCard.title}
                     className="absolute inset-0 w-full h-full object-cover"

@@ -82,7 +82,7 @@ const PlayerCard = ({ player }) => {
 
         <div className="w-1/2 flex justify-end items-end">
           <img
-            src={player.image_url || '/img/picture.avif'}
+            src={player.image_url || '/img/picture.webp'}
             alt={player.first_name}
             className="h-64 object-contain"
           />

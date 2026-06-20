@@ -66,7 +66,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 z-10"></div>
 
         <video
-          src="/videos/hero2.webm"
+          src="/videos/hero1.mp4"
           autoPlay
           muted
           playsInline

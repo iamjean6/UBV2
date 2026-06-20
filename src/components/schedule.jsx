@@ -2,6 +2,7 @@ import { CalendarCheck, ChevronLeft, ChevronRight, Repeat, TvMinimalPlay } from 
 import { useState, useEffect } from "react";
 import { fetchGames } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import ImageComponent from "../UI/imagecomponent";
 
 /* ===================== */
 /* Countdown Hook */
@@ -83,7 +84,7 @@ function GameCard({ game }) {
               <span className="text-black font-black text-2xl uppercase tracking-wider px-2">
                 vs.
               </span>
-              <img src={game.logo} alt={game.opponent} className="h-40 w-40 object-contain" />
+              <ImageComponent src={game.logo} alt={game.opponent} className="h-40 w-40 object-contain" />
             </div>
           </>
         )}
@@ -114,7 +115,7 @@ function GameCard({ game }) {
                 vs.
               </span>
 
-              <img src={game.logo} alt={game.opponent} className="h-40 w-40 object-contain" />
+              <ImageComponent src={game.logo} alt={game.opponent} className="h-40 w-40 object-contain" />
             </div>
           </>
         )}

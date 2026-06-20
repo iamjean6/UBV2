@@ -49,7 +49,7 @@ const Footer = () => {
             </div>
 
             <p className="text-gray-400 leading-7 max-w-xs">
-              Inissimos ducimos qui blanditiis praesentium voluptatum deleniti.
+              Value beyond success
             </p>
           </div>
 

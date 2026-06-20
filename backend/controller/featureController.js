@@ -1,13 +1,13 @@
 import FeatureStory from "../model/featureModel.js";
 import { v4 } from "uuid";
 import { putObject } from "../util/putObject.js";
+import { uploadOptimizedImages } from "../util/uploadOptimizedImages.js";
 import { getObject } from "../util/getObject.js";
 import { deleteObject } from "../util/deleteObject.js";
 import cache from "../cache/cache.js";
 import mongoose from "mongoose";
 import sharp from "sharp";
 import logger from '../util/logger.js';
-
 export const getFeatures = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -90,13 +90,7 @@ export const createStory = async (req, res, next) => {
             });
         }
 
-        // Optimize cover image
-        const optimizedBuffer = await sharp(file.data)
-            .resize(1200, null, { withoutEnlargement: true })
-            .webp({ quality: 80 })
-            .toBuffer();
-
-        const uploadResult = await putObject(optimizedBuffer, fileName + ".webp", "image/webp");
+        const uploadResult = await uploadOptimizedImages(file.data, fileName);
         if (!uploadResult || !uploadResult.url) {
             throw new Error("Failed to upload cover image");
         }
@@ -171,12 +165,8 @@ export const updateStory = async (req, res, next) => {
         };
 
         if (files.file) {
-            const fileName = "features/" + v4() + ".webp";
-            const optimizedBuffer = await sharp(files.file.data)
-                .resize(1200, null, { withoutEnlargement: true })
-                .webp({ quality: 80 })
-                .toBuffer();
-            const uploadedImage = await putObject(optimizedBuffer, fileName, "image/webp");
+            const baseFileName = "features/" + v4();
+            const uploadedImage = await uploadOptimizedImages(files.file.data, baseFileName);
             if (uploadedImage && uploadedImage.url) {
                 updateData.image = uploadedImage.url;
                 updateData.key = uploadedImage.key;

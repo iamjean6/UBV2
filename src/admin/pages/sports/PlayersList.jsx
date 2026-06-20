@@ -147,7 +147,7 @@ export default function PlayersList() {
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
                                     <div className="flex items-center">
                                         <div className="h-10 w-10 flex-shrink-0">
-                                            <img className="h-10 w-10 rounded-full object-cover border border-[var(--border)]" src={player.image_url || '/img/picture.avif'} alt="" />
+                                            <img className="h-10 w-10 rounded-full object-cover border border-[var(--border)]" src={player.image_url || '/img/picture.webp'} alt="" />
                                         </div>
                                         <div className="ml-4">
                                             <div className="font-medium text-[var(--card-foreground)]">{player.first_name} {player.last_name}</div>

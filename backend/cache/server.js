@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import logger from "../util/logger.js";
 dotenv.config();
 
-const url = process.env.REDIS_URL || `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
+const url = process.env.REDIS_URL 
 
 const client = createClient({
     url: url,

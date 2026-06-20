@@ -9,6 +9,7 @@ const Display = () => {
         <figure className="relative lg:col-span-3 overflow-hidden group cursor-pointer">
 
           <img
+            loading="lazy"
             src="/img/pic5.webp"
             alt="Performance training"
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -35,6 +36,7 @@ const Display = () => {
           {/* Card 1 */}
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
+              loading="lazy"
               src="/img/pic1.webp"
               alt="Equipment"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -48,6 +50,7 @@ const Display = () => {
           {/* Card 2 */}
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
+              loading="lazy"
               src="/img/pic2.webp"
               alt="Community"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -61,6 +64,7 @@ const Display = () => {
           {/* Card 3 */}
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
+              loading="lazy"
               src="/img/pic3.webp"
               alt="Technique"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -74,6 +78,7 @@ const Display = () => {
           {/* Card 4 */}
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
+              loading="lazy"
               src="/img/pic4.webp"
               alt="Lifestyle"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"

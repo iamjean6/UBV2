@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {Volume2} from 'lucide-react'
+import ImageComponent from './imagecomponent';
 const Coachescard = ({staff}) => {
 const handlePlayAudio = () => {
   const audio = new Audio(staff.audio);
@@ -9,7 +10,7 @@ const handlePlayAudio = () => {
     <div className='w-full font-barlow rounded-xl shadow-md overflow-hidden border border-gray-200'>
       <div className='flex items-center gap-2'>
         <div className='w-1/2'>
-            <img src={staff.img} 
+            <ImageComponent src={staff.img} 
             className='h-64 object-contain '
             />
         </div>

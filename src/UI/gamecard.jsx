@@ -6,6 +6,7 @@ import { statusStyles, resultStyles } from "../../constants"
 import { ChartArea, Play } from "lucide-react"
 import { fetchGames, fetchLeagues } from "../services/api"
 import { cn } from "../admin/layout/Sidebar"
+import ImageComponent from "./imagecomponent"
 
 
 const GameCard = ({ game }) => {
@@ -99,7 +100,7 @@ const GameCard = ({ game }) => {
           </div>
 
           <div className="flex flex-col items-center px-8 gap-1">
-            <img src={opponentLogo} alt="logo" className="w-40 h-40 object-contain" />
+            <ImageComponent src={opponentLogo} alt="logo" className="w-40 h-40 object-contain"  />
             <div>
               <p>{opponent}</p>
             </div>
@@ -117,12 +118,12 @@ const GameCard = ({ game }) => {
           <div className="border-t p-4 space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col items-center">
-                <img src='/img/jersey.png' alt="jersey" className="h-28 object-contain" />
+                <ImageComponent src='/img/jersey.webp' alt="jersey" className="h-28 object-contain"  />
                 <p className="text-xs mt-2">Powered by: URBANVILLESPORTS</p>
               </div>
               <div>
                 {game.eventImage ? (
-                  <img src={game.eventImage} alt="event" className="w-full h-28 object-cover rounded-md" />
+                  <ImageComponent src={game.eventImage} alt="event" className="w-full h-28 object-cover rounded-md"  />
                 ) : (
                   <div className="w-full h-28 bg-gray-100 rounded-md" />
                 )}
@@ -186,20 +187,20 @@ const GameCard = ({ game }) => {
           </div>
 
           <div className="flex flex-col items-center gap-4 p-6 border-r">
-            <img src={opponentLogo} alt="logo" className="w-40 h-40 object-contain" />
+            <ImageComponent src={opponentLogo} alt="logo" className="w-40 h-40 object-contain"  />
             <div>
               <p className="font-bold text-xl">{opponent}</p>
             </div>
           </div>
 
           <div className="flex flex-col items-center justify-center p-4 border-r">
-            <img src="/img/jersey.png" alt="jersey" className="h-32 object-contain" />
+            <ImageComponent src="/img/jersey.webp" alt="jersey" className="h-32 object-contain"  />
             <p className="text-xs mt-2">Powered by: URBANVILLESPORTS</p>
           </div>
 
           <div className="flex items-center justify-center p-4">
             {game.eventImage ? (
-              <img src={game.eventImage} alt="event" className="w-full h-40 object-cover rounded-md" />
+              <ImageComponent src={game.eventImage} alt="event" className="w-full h-40 object-cover rounded-md"  />
             ) : (
               <div className="w-full h-40 bg-gray-100 rounded-md" />
             )}

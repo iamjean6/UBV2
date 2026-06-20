@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { HiX } from "react-icons/hi";
 import Button from "../components/button";
 import { MessageCircle } from "lucide-react";
-
-
-const FAQItem = ({ question, answer, defaultOpen = false }) => {
+import ImageComponent from "../UI/imagecomponent";const FAQItem = ({ question, answer, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
@@ -167,11 +165,11 @@ const ContactPage = () => {
 
           </div>
           <div className="relative order-1 md:order-3 w-full h-[75vw] md:h-auto">
-            <img
+            <ImageComponent
               src="/img/shai.webp"
               alt="JUUN.J model"
               className="w-full h-full md:absolute md:right-0 md:top-[-60px] md:h-auto object-contain object-top"
-              style={{ filter: "grayscale(100%)" }}
+              
             />
           </div>
 
@@ -183,12 +181,11 @@ const ContactPage = () => {
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.05),rgba(0,0,0,0.15))] pointer-events-none" />
 
-        <img
+        <ImageComponent
           src="/img/kyrie.webp"
           alt=""
-          aria-hidden="true"
           className="claim-model--left absolute bottom-0 left-0 object-contain object-bottom"
-          style={{ filter: "grayscale(100%)" }}
+          
         />
 
         <button
@@ -201,12 +198,11 @@ const ContactPage = () => {
           <span className="claim-cta-arrow">→</span>
         </button>
 
-        <img
+        <ImageComponent
           src="/img/steph.webp"
           alt=""
-          aria-hidden="true"
           className="claim-model--right absolute bottom-0 right-0 object-contain object-bottom"
-          style={{ filter: "grayscale(100%)" }}
+          
         />
       </div>
       {activeCard && (
@@ -216,10 +212,11 @@ const ContactPage = () => {
             className="bg-neutral-900 text-white max-w-4xl w-full h-[420px] rounded-xl overflow-hidden grid grid-cols-2 "
           >
             <div className="relative h-[420px] md:h-full">
-              <img
+              <ImageComponent
                 src={activeCard.image}
                 alt={activeCard.title}
                 className="absolute inset-0 w-full h-full object-cover"
+                
               />
 
               <button

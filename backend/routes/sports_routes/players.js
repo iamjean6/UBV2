@@ -2,6 +2,7 @@ import express from 'express';
 import pool from '../../pgdb/db.js';
 import { v4 as uuidv4 } from 'uuid';
 import { putObject } from '../../util/putObject.js';
+import { uploadOptimizedImages } from '../../util/uploadOptimizedImages.js';
 import { deleteObject } from '../../util/deleteObject.js';
 import cache from '../../cache/cache.js';
 import { protectAdminRoute } from '../../middleware/authMiddleware.js';
@@ -27,12 +28,8 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PLAYER', 'Sports'),
         let final_audio_url = req.body.intro_audio_url || null;
 
         if (files.image) {
-            const fileName = `players/images/${uuidv4()}.webp`;
-            const optimized = await sharp(files.image.data)
-                .resize(600, 600, { fit: 'cover' })
-                .webp({ quality: 80 })
-                .toBuffer();
-            const upload = await putObject(optimized, fileName, 'image/webp');
+            const baseFileName = `players/images/${uuidv4()}`;
+            const upload = await uploadOptimizedImages(files.image.data, baseFileName, 600, 600, { fit: 'cover' });
             if (upload) final_image_url = upload.url;
         }
         if (files.audio) {
@@ -136,12 +133,8 @@ router.put('/:id', protectAdminRoute, logAdminActivity('UPDATE_PLAYER', 'Sports'
                 const oldKey = currentPlayer.rows[0].image_url.split('.com/')[1];
                 await deleteObject(oldKey);
             }
-            const fileName = `players/images/${uuidv4()}.webp`;
-            const optimized = await sharp(files.image.data)
-                .resize(600, 600, { fit: 'cover' })
-                .webp({ quality: 80 })
-                .toBuffer();
-            const upload = await putObject(optimized, fileName, 'image/webp');
+            const baseFileName = `players/images/${uuidv4()}`;
+            const upload = await uploadOptimizedImages(files.image.data, baseFileName, 600, 600, { fit: 'cover' });
             if (upload) final_image_url = upload.url;
         }
         if (files.audio) {
