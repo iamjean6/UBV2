@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit2, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { fetchPlayers, deletePlayer, fetchTeams } from '../../../services/api';
+import { fetchPlayers, deletePlayer, fetchTeams, restorePlayer } from '../../../services/api';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function PlayersList() {
@@ -14,17 +14,18 @@ export default function PlayersList() {
     const [error, setError] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [playerToDelete, setPlayerToDelete] = useState(null);
+    const [showDeleted, setShowDeleted] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         loadPlayers();
-    }, []);
+    }, [showDeleted]);
 
     const loadPlayers = async () => {
         try {
             setLoading(true);
             const [playersRes, teamsRes] = await Promise.all([
-                fetchPlayers(),
+                fetchPlayers(showDeleted),
                 fetchTeams()
             ]);
             if (playersRes.status === 'success') {
@@ -59,6 +60,17 @@ export default function PlayersList() {
             alert('Failed to delete player.');
         } finally {
             setPlayerToDelete(null);
+        }
+    };
+
+    const handleRestore = async (id) => {
+        if (!window.confirm('Are you sure you want to restore this player?')) return;
+        try {
+            await restorePlayer(id);
+            loadPlayers();
+        } catch (err) {
+            console.error('Error restoring player:', err);
+            alert('Failed to restore player.');
         }
     };
 
@@ -130,6 +142,18 @@ export default function PlayersList() {
                 >
                     {positions.map(pos => <option key={pos} value={pos}>{pos}</option>)}
                 </select>
+
+                <div className="flex items-center gap-2 ml-auto">
+                    <label className="text-sm text-[var(--muted-foreground)] flex items-center gap-2 cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            checked={showDeleted} 
+                            onChange={(e) => setShowDeleted(e.target.checked)}
+                            className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--primary)] bg-[var(--background)]"
+                        />
+                        Show Deleted
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -160,7 +184,12 @@ export default function PlayersList() {
                                             <img className="h-10 w-10 rounded-full object-cover border border-[var(--border)]" src={player.image_url || '/img/picture.webp'} alt="" />
                                         </div>
                                         <div className="ml-4">
-                                            <div className="font-medium text-[var(--card-foreground)]">{player.first_name} {player.last_name}</div>
+                                            <div className="font-medium text-[var(--card-foreground)] flex items-center gap-2">
+                                                {player.first_name} {player.last_name}
+                                                {player.is_active === false && (
+                                                    <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Deleted</span>
+                                                )}
+                                            </div>
                                             <div className="text-xs text-[var(--muted-foreground)]">{player.nickname}</div>
                                         </div>
                                     </div>
@@ -183,23 +212,34 @@ export default function PlayersList() {
 
                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                     <div className="flex items-center justify-end gap-2">
-                                        <button className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors p-1" title="View Stats">
-                                            <Eye className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => navigate(`/admin/sports/players/edit/${player.id}`)}
-                                            className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors p-1"
-                                            title="Edit"
-                                        >
-                                            <Edit2 className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => confirmDelete(player.id)}
-                                            className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
-                                            title="Delete"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
+                                        {player.is_active === false ? (
+                                            <button
+                                                onClick={() => handleRestore(player.id)}
+                                                className="text-sm font-medium text-green-600 hover:text-green-700 transition-colors px-3 py-1 rounded-md bg-green-50 border border-green-200"
+                                            >
+                                                Restore
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors p-1" title="View Stats">
+                                                    <Eye className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => navigate(`/admin/sports/players/edit/${player.id}`)}
+                                                    className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors p-1"
+                                                    title="Edit"
+                                                >
+                                                    <Edit2 className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => confirmDelete(player.id)}
+                                                    className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </td>
                             </tr>

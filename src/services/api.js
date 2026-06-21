@@ -104,7 +104,11 @@ export const googleLogin = async (token) => {
 
 
 // Sports Module API
-export const fetchPlayers = async () => (await api.get('/players')).data;
+export const fetchPlayers = async (includeInactive = false) => {
+    const url = includeInactive ? '/players?include_inactive=true' : '/players';
+    return (await api.get(url)).data;
+};
+export const restorePlayer = async (id) => (await api.put(`/players/${id}/restore`)).data;
 export const fetchOnePlayer = async (id) => (await api.get(`/players/${id}`)).data;
 export const createPlayer = async (formData) => (await api.post('/players', formData, { headers: { 'Content-Type': 'multipart/form-data' } })).data;
 export const updatePlayer = async (id, formData) => (await api.put(`/players/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })).data;

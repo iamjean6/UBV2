@@ -55,21 +55,31 @@ router.post('/', protectAdminRoute, logAdminActivity('CREATE_PLAYER', 'Sports'),
 
 router.get('/', async (req, res, next) => {
     try {
-        const cachedPlayers = await cache.fetchPlayers();
-        if (cachedPlayers) {
-            return res.status(200).json({
-                status: 'success',
-                data: cachedPlayers
-            });
+        const includeInactive = req.query.include_inactive === 'true';
+        
+        if (!includeInactive) {
+            const cachedPlayers = await cache.fetchPlayers();
+            if (cachedPlayers) {
+                return res.status(200).json({
+                    status: 'success',
+                    data: cachedPlayers
+                });
+            }
         }
+
         const queryText = `
             SELECT p.*, t.name as team_name 
             FROM sports.players p 
             LEFT JOIN sports.teams t ON p.team_id = t.id 
+            ${includeInactive ? '' : 'WHERE p.is_active = TRUE'}
             ORDER BY p.id DESC
         `;
         const result = await pool.query(queryText);
-        await cache.savePlayers(result.rows);
+        
+        if (!includeInactive) {
+            await cache.savePlayers(result.rows);
+        }
+        
         res.status(200).json({
             status: 'success',
             data: result.rows
@@ -174,20 +184,9 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PLAYER', 'Spor
     try {
         const { id } = req.params;
 
-        // Fetch to clean up files from S3
-        const player = await pool.query('SELECT image_url, intro_audio_url FROM sports.players WHERE id = $1', [id]);
-        if (player.rows.length > 0) {
-            if (player.rows[0].image_url) {
-                const key = player.rows[0].image_url.split('.com/')[1];
-                await deleteObject(key);
-            }
-            if (player.rows[0].intro_audio_url) {
-                const key = player.rows[0].intro_audio_url.split('.com/')[1];
-                await deleteObject(key);
-            }
-        }
-
-        const result = await pool.query('DELETE FROM sports.players WHERE id = $1 RETURNING *', [id]);
+        // Soft Delete: Just update is_active to FALSE instead of deleting the row
+        // We DO NOT delete S3 images because we want them to remain visible in historical game stats!
+        const result = await pool.query('UPDATE sports.players SET is_active = FALSE WHERE id = $1 RETURNING *', [id]);
 
         await cache.invalidatePlayersCache(id);
 
@@ -205,6 +204,28 @@ router.delete('/:id', protectAdminRoute, logAdminActivity('DELETE_PLAYER', 'Spor
     } catch (err) {
         next(err);
     }
-})
+});
+
+router.put('/:id/restore', protectAdminRoute, logAdminActivity('RESTORE_PLAYER', 'Sports'), async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('UPDATE sports.players SET is_active = TRUE WHERE id = $1 RETURNING *', [id]);
+        await cache.invalidatePlayersCache(id);
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Player not found'
+            });
+        }
+        
+        res.status(200).json({
+            status: 'success',
+            message: 'Player restored successfully'
+        });
+    } catch (err) {
+        next(err);
+    }
+});
 
 export default router;

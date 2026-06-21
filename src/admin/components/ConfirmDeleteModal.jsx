@@ -11,9 +11,9 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.2 }}
-                        className="bg-gray-700 border border-white rounded-xl shadow-2xl p-6 w-full max-w-md"
+                        className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] p-6 w-full max-w-md"
                     >
-                        <h3 className="text-xl font-bold text-white mb-2">
+                        <h3 className="text-xl  font-bold text-white mb-2">
                             {title || 'Confirm Deletion'}
                         </h3>
                         <p className="text-white mb-6">
@@ -23,7 +23,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                         <div className="flex justify-end gap-3">
                             <button
                                 onClick={onClose}
-                                className="px-4 py-2 rounded-lg bg-[var(--bg-2)] text-white hover:bg-[var(--bg-3)] transition-colors border border-[var(--border)]"
+                                className="px-4 py-2 cursor-pointer rounded-lg bg-[var(--bg-2)] text-white hover:bg-[var(--bg-3)] transition-colors border border-[var(--border)]"
                             >
                                 Cancel
                             </button>
@@ -32,7 +32,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                                     onConfirm();
                                     onClose();
                                 }}
-                                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20"
+                                className="px-4 py-2 cursor-pointer rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20"
                             >
                                 Delete
                             </button>
