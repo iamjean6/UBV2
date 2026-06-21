@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Edit2, Trash2, Building2, Activity } from 'lucide-react';
 import { fetchTeams, deleteTeam } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function TeamsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [teamToDelete, setTeamToDelete] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,14 +30,20 @@ export default function TeamsList() {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this team?')) {
-            try {
-                await deleteTeam(id);
-                loadTeams();
-            } catch (err) {
-                console.error('Error deleting team:', err);
-            }
+    const confirmDelete = (id) => {
+        setTeamToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!teamToDelete) return;
+        try {
+            await deleteTeam(teamToDelete);
+            loadTeams();
+        } catch (err) {
+            console.error('Error deleting team:', err);
+        } finally {
+            setTeamToDelete(null);
         }
     };
 
@@ -107,7 +116,7 @@ export default function TeamsList() {
                                     <Edit2 className="h-4 w-4" />
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(team.id)}
+                                    onClick={() => confirmDelete(team.id)}
                                     className="text-[var(--muted-foreground)] hover:text-red-500 p-1"
                                 >
                                     <Trash2 className="h-4 w-4" />
@@ -117,6 +126,14 @@ export default function TeamsList() {
                     ))
                 )}
             </div>
+
+            <ConfirmDeleteModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDelete} 
+                title="Delete Team" 
+                message="Are you sure you want to delete this team? This action cannot be undone." 
+            />
         </div>
     );
 }

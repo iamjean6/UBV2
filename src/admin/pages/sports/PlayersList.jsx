@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Edit2, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { fetchPlayers, deletePlayer, fetchTeams } from '../../../services/api'
+import { fetchPlayers, deletePlayer, fetchTeams } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function PlayersList() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,6 +12,8 @@ export default function PlayersList() {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [playerToDelete, setPlayerToDelete] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,14 +44,21 @@ export default function PlayersList() {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this player?')) return;
+    const confirmDelete = (id) => {
+        setPlayerToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!playerToDelete) return;
         try {
-            await deletePlayer(id);
-            setPlayers(players.filter(p => p.id !== id));
+            await deletePlayer(playerToDelete);
+            setPlayers(players.filter(p => p.id !== playerToDelete));
         } catch (err) {
             console.error('Error deleting player:', err);
             alert('Failed to delete player.');
+        } finally {
+            setPlayerToDelete(null);
         }
     };
 
@@ -184,7 +194,7 @@ export default function PlayersList() {
                                             <Edit2 className="h-4 w-4" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(player.id)}
+                                            onClick={() => confirmDelete(player.id)}
                                             className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
                                             title="Delete"
                                         >
@@ -198,6 +208,14 @@ export default function PlayersList() {
                 </table>
             </div>
         </div>
+
+        <ConfirmDeleteModal 
+            isOpen={isDeleteModalOpen} 
+            onClose={() => setIsDeleteModalOpen(false)} 
+            onConfirm={handleDelete} 
+            title="Delete Player" 
+            message="Are you sure you want to delete this player? This action cannot be undone." 
+        />
     </div>
     );
 }

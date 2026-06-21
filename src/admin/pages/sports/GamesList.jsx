@@ -1,6 +1,7 @@
 import { Plus, Search, Filter, Edit2, Trash2, BarChart2, LayoutGrid, List, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { fetchGames, deleteGame, fetchLeagues } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 import { cn } from '../../layout/Sidebar';
 import { useEffect, useState } from 'react';
 import GameSummary from './GameSummary';
@@ -14,6 +15,8 @@ export default function GamesList() {
     const [leagues, setLeagues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [gameToDelete, setGameToDelete] = useState(null);
     const navigate = useNavigate();
     const override = {
         display: "block",
@@ -50,14 +53,21 @@ export default function GamesList() {
         loadData();
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this game? This will also remove all associated player stats.')) return;
+    const confirmDelete = (id) => {
+        setGameToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!gameToDelete) return;
         try {
-            await deleteGame(id);
-            setGames(prev => prev.filter(g => g.id !== id));
+            await deleteGame(gameToDelete);
+            setGames(prev => prev.filter(g => g.id !== gameToDelete));
         } catch (err) {
             console.error('Error deleting game:', err);
             alert('Failed to delete game.');
+        } finally {
+            setGameToDelete(null);
         }
     };
 
@@ -244,7 +254,7 @@ export default function GamesList() {
                                                         <BarChart2 className="h-4 w-4" />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(game.id)}
+                                                        onClick={() => confirmDelete(game.id)}
                                                         className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
                                                         title="Delete"
                                                     >
@@ -280,6 +290,14 @@ export default function GamesList() {
                     ))}
                 </div>
             )}
+
+            <ConfirmDeleteModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDelete} 
+                title="Delete Game" 
+                message="Are you sure you want to delete this game? This will also remove all associated player stats. This action cannot be undone." 
+            />
         </div>
     );
 }

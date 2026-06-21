@@ -36,8 +36,7 @@ const Display = () => {
           {/* Card 1 */}
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
-              loading="lazy"
-              src="/img/pic1.webp"
+              src="/img/pic1.avif"
               alt="Equipment"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
@@ -51,7 +50,7 @@ const Display = () => {
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
               loading="lazy"
-              src="/img/pic2.webp"
+              src="/img/pic2.avif"
               alt="Community"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
@@ -65,7 +64,7 @@ const Display = () => {
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
               loading="lazy"
-              src="/img/pic3.webp"
+              src="/img/pic3.avif"
               alt="Technique"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
@@ -79,7 +78,7 @@ const Display = () => {
           <figure className="relative overflow-hidden group cursor-pointer">
             <img
               loading="lazy"
-              src="/img/pic4.webp"
+              src="/img/pic4.avif"
               alt="Lifestyle"
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />

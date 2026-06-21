@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { fetchPrograms, deleteProgram } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function ProgramsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [programs, setPrograms] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [programToDelete, setProgramToDelete] = useState(null);
     const navigate = useNavigate();
 
     const loadPrograms = async () => {
@@ -25,15 +28,21 @@ export default function ProgramsList() {
         loadPrograms();
     }, []);
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this program?')) {
-            try {
-                await deleteProgram(id);
-                loadPrograms();
-            } catch (error) {
-                console.error("Error deleting program:", error);
-                alert("Failed to delete program");
-            }
+    const confirmDelete = (id) => {
+        setProgramToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!programToDelete) return;
+        try {
+            await deleteProgram(programToDelete);
+            loadPrograms();
+        } catch (error) {
+            console.error("Error deleting program:", error);
+            alert("Failed to delete program");
+        } finally {
+            setProgramToDelete(null);
         }
     };
 
@@ -129,7 +138,7 @@ export default function ProgramsList() {
                                                 <Edit2 className="h-4 w-4" />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(program._id)}
+                                                onClick={() => confirmDelete(program._id)}
                                                 className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
                                                 title="Delete"
                                             >
@@ -143,6 +152,14 @@ export default function ProgramsList() {
                     </table>
                 </div>
             </div>
+
+            <ConfirmDeleteModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDelete} 
+                title="Delete Program" 
+                message="Are you sure you want to delete this program? This action cannot be undone." 
+            />
         </div>
     );
 }

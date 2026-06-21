@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Edit, Trash2, Calendar } from 'lucide-react';
 import { fetchLeagues, deleteLeague } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function LeaguesList() {
-    const [leagues, setLeagues] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [leagueToDelete, setLeagueToDelete] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,14 +27,20 @@ export default function LeaguesList() {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this league? This will affect stats for games in this league.')) {
-            try {
-                await deleteLeague(id);
-                loadLeagues();
-            } catch (err) {
-                console.error('Error deleting league:', err);
-            }
+    const confirmDelete = (id) => {
+        setLeagueToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!leagueToDelete) return;
+        try {
+            await deleteLeague(leagueToDelete);
+            loadLeagues();
+        } catch (err) {
+            console.error('Error deleting league:', err);
+        } finally {
+            setLeagueToDelete(null);
         }
     };
 
@@ -83,7 +91,7 @@ export default function LeaguesList() {
                                             <button onClick={() => navigate(`/admin/sports/leagues/edit/${league.id}`)} className="p-1 text-[var(--muted-foreground)] hover:text-[var(--primary)]">
                                                 <Edit className="h-4 w-4" />
                                             </button>
-                                            <button onClick={() => handleDelete(league.id)} className="p-1 text-[var(--muted-foreground)] hover:text-red-500">
+                                            <button onClick={() => confirmDelete(league.id)} className="p-1 text-[var(--muted-foreground)] hover:text-red-500">
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
                                         </div>
@@ -94,6 +102,14 @@ export default function LeaguesList() {
                     </tbody>
                 </table>
             </div>
+            
+            <ConfirmDeleteModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDelete} 
+                title="Delete League" 
+                message="Are you sure you want to delete this league? This will affect stats for games in this league. This action cannot be undone." 
+            />
         </div>
     );
 }

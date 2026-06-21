@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, Eye, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { fetchFeatures, deleteFeature } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function FeaturesList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [features, setFeatures] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [featureToDelete, setFeatureToDelete] = useState(null);
     const navigate = useNavigate();
 
     const loadFeatures = async () => {
@@ -25,15 +28,21 @@ export default function FeaturesList() {
         loadFeatures();
     }, []);
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this featured story?')) {
-            try {
-                await deleteFeature(id);
-                loadFeatures();
-            } catch (error) {
-                console.error("Error deleting feature:", error);
-                alert("Failed to delete feature");
-            }
+    const confirmDelete = (id) => {
+        setFeatureToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!featureToDelete) return;
+        try {
+            await deleteFeature(featureToDelete);
+            loadFeatures();
+        } catch (error) {
+            console.error("Error deleting feature:", error);
+            alert("Failed to delete feature");
+        } finally {
+            setFeatureToDelete(null);
         }
     };
 
@@ -129,7 +138,7 @@ export default function FeaturesList() {
                                                 <Edit2 className="h-4 w-4" />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(feature._id)}
+                                                onClick={() => confirmDelete(feature._id)}
                                                 className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
                                                 title="Delete"
                                             >
@@ -152,6 +161,14 @@ export default function FeaturesList() {
                     </table>
                 </div>
             </div>
+
+            <ConfirmDeleteModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDelete} 
+                title="Delete Featured Story" 
+                message="Are you sure you want to delete this featured story? This action cannot be undone." 
+            />
         </div>
     );
 }

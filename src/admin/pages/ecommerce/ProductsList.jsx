@@ -3,6 +3,7 @@ import { Plus, Search, Filter, MoreVertical, Edit2, Trash2, Loader2, RefreshCw }
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../layout/Sidebar';
 import { fetchProducts, deleteProduct, fetchCategories } from '../../../services/api';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 
 export default function ProductsList() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,6 +12,8 @@ export default function ProductsList() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deleteLoading, setDeleteLoading] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null);
     const navigate = useNavigate();
 
     const loadData = async () => {
@@ -33,17 +36,23 @@ export default function ProductsList() {
         loadData();
     }, []);
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this product?")) return;
+    const confirmDelete = (id) => {
+        setProductToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!productToDelete) return;
         try {
-            setDeleteLoading(id);
-            await deleteProduct(id);
+            setDeleteLoading(productToDelete);
+            await deleteProduct(productToDelete);
             await loadData();
         } catch (err) {
             console.error("Failed to delete product", err);
             alert("Failed to delete product");
         } finally {
             setDeleteLoading(null);
+            setProductToDelete(null);
         }
     };
 
@@ -197,7 +206,7 @@ export default function ProductsList() {
                                                 <span className="sr-only">Edit {product.name}</span>
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(product.id)}
+                                                onClick={() => confirmDelete(product.id)}
                                                 disabled={deleteLoading === product.id}
                                                 className="text-[var(--muted-foreground)] hover:text-red-500 transition-colors p-1"
                                             >
@@ -212,6 +221,14 @@ export default function ProductsList() {
                     </table>
                 </div>
             </div>
+            
+            <ConfirmDeleteModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDelete} 
+                title="Delete Product" 
+                message="Are you sure you want to delete this product? This action cannot be undone." 
+            />
         </div>
     );
 }
