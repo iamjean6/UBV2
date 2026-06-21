@@ -11,7 +11,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.2 }}
-                        className="bg-[var(--bg-1)] border border-[var(--border)] rounded-xl shadow-2xl p-6 w-full max-w-md"
+                        className="bg-gray-700 border border-white rounded-xl shadow-2xl p-6 w-full max-w-md"
                     >
                         <h3 className="text-xl font-bold text-white mb-2">
                             {title || 'Confirm Deletion'}
