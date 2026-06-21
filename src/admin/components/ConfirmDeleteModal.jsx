@@ -16,7 +16,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                         <h3 className="text-xl font-bold text-white mb-2">
                             {title || 'Confirm Deletion'}
                         </h3>
-                        <p className="text-[var(--text-2)] mb-6">
+                        <p className="text-white mb-6">
                             {message || 'Are you sure you want to delete this item? This action cannot be undone.'}
                         </p>
 
