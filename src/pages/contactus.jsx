@@ -103,39 +103,27 @@ const ContactPage = () => {
 
             {/* Press */}
             <div className="flex flex-col gap-1">
-              <h3 className="text-lg font-bold uppercase tracking-widest ">PRESS</h3>
+              <h3 className="text-lg font-bold uppercase tracking-widest ">MANAGEMENT</h3>
               <p className="text-lg font-semibold uppercase tracking-wide text-black">
-                SAMSUNG C&T CORPORATION (MILAN OFFICE)
+                KISUMU OFFICE (HEAD QUARTERS)
               </p>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Centro Direzionale Milanofiori, Strada 2,<br />
-                PALAZZO C1, 20057 Assago Milano, Italy
+               P.O BOX 40100 <br />
+                Mamboleo, Kisumu Kenya
               </p>
               <p className="text-lg font-semibold uppercase tracking-wide text-black mt-3">
-                JUUN.J PR
+                PHONE 
               </p>
-              <p className="text-sm text-gray-500">JUUN.JPR@samsung.com</p>
+              <p className="text-sm text-gray-500">+254723866886 / +254783866886</p>
             </div>
 
             {/* Sales */}
             <div className="flex flex-col gap-1">
-              <h3 className="text-lg font-bold uppercase tracking-widest ">SALES</h3>
+              <h3 className="text-lg font-bold uppercase tracking-widest ">IT TEAM</h3>
               <p className="text-sm font-semibold uppercase tracking-wide text-black">
-                JUUN.J SHOWROOM
+                LEAD DEVELOPER
               </p>
-              <p className="text-sm text-gray-500">showroom.it@samsung.com</p>
-            </div>
-
-            {/* Head Office */}
-            <div className="flex flex-col gap-1">
-              <h3 className="text-lg font-bold uppercase tracking-widest ">HEAD OFFICE</h3>
-              <p className="text-lg font-semibold uppercase tracking-wide text-black">
-                JUUN.J SAMSUNG C&T CORPORATION
-              </p>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                2806, Nambusunhwan-ro, Gangnam-Gu, Seoul,<br />
-                Republic of Korea
-              </p>
+              <p className="text-sm text-gray-500">jeanobuya8@gmail.com</p>
             </div>
 
             {/* FAQ */}
@@ -147,19 +135,19 @@ const ContactPage = () => {
               <FAQItem
                 question="Can Urbanville beat Nairobi City Thunder?"
                 defaultOpen
-                answer="We're always open to new creative ventures. For partnership or collaboration inquiries, please fill out our Collaboration Inquiry Form on the Contact Us page, and our team will review and reach out if there's a match."
+                answer="Yes. We are always ready to tackle situtaions that make us think outside the box. "
               />
               <FAQItem
-                question="Where can I find information on JUUN.J campaigns and releases?"
-                answer="All campaign and release information is published on our official website and social media channels including Instagram, YouTube, and Twitter."
+                question="Which leagues does Urbanville participate in?"
+                answer="Currently Urbanville participates in Kenya Basketball Federation's(KBF) Division 2 league and Kisumu Basketball League."
               />
               <FAQItem
-                question="How can I reach your customer support team?"
-                answer="You can reach our customer support team via email at JUUNJ.PR@Samsung.com or through the contact form on this page."
+                question="Can anyone join urbanville?"
+                answer="Yes, anyone from age 18-26 can join urbanville"
               />
               <FAQItem
-                question="How to Purchase JUUN.J Products?"
-                answer="JUUN.J products are available at our official stores across South Korea, Australia, Austria, Canada, China, and France, as well as through our online platform."
+                question="Do you deliver you merchandize throughout the country?"
+                answer="Our services are accessible throughout the country."
               />
             </div>
 
